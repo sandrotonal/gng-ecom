@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gizlilik Politikası — GNG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        main: ['Manrope', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body class="bg-black text-white font-main" data-page="privacy">
+
+    <!-- TOAST -->
+    <div id="toast"></div>
+
+    <!-- ═══════════ SITE ═══════════ -->
+    <div id="site">
+
+        <!-- NAV -->
+        <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/5">
+            <div class="max-w-7xl mx-auto px-5 md:px-10 flex items-center justify-between h-16 md:h-20">
+                <a href="../index.html" class="font-mono font-bold text-lg md:text-xl text-white tracking-tight">GNG</a>
+                <div class="hidden lg:flex items-center gap-8">
+                    <a href="../index.html#drops" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Drops</a>
+                    <a href="../index.html#about" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Hakkında</a>
+                    <a href="../index.html#crew" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Kadro</a>
+                    <a href="../index.html#lookbook" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Lookbook</a>
+                    <a href="../index.html#events" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Etkinlikler</a>
+                    <a href="../index.html#faq" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">SSS</a>
+                    <a href="contact.html" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">İletişim</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="openCart()" class="relative p-2 text-neutral-500 hover:text-white transition-colors">
+                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                        <span id="cartN" class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-white text-black text-[9px] font-bold rounded-full flex items-center justify-center">0</span>
+                    </button>
+                    <button class="lg:hidden p-2 text-white" onclick="toggleMob()">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MOBILE MENU -->
+        <div id="mobMenu" class="fixed inset-0 z-40 bg-black flex flex-col items-center justify-center gap-6 lg:hidden">
+            <a href="../index.html#drops" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">DROPS</a>
+            <a href="../index.html#about" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">HAKKINDA</a>
+            <a href="../index.html#crew" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">KADRO</a>
+            <a href="../index.html#lookbook" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">LOOKBOOK</a>
+            <a href="../index.html#events" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">ETKİNLİKLER</a>
+            <a href="../index.html#faq" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">SSS</a>
+            <a href="contact.html" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">İLETİŞİM</a>
+            <div class="mt-8"><a href="#" class="text-neutral-600 hover:text-white transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a></div>
+        </div>
+
+        <!-- CART -->
+        <div id="cartBox" class="fixed top-0 right-0 h-full w-full max-w-sm bg-black border-l border-white/5 z-50">
+            <div class="flex items-center justify-between p-6 border-b border-white/5">
+                <span class="text-[10px] uppercase tracking-[0.3em] font-bold">Sepet</span>
+                <button onclick="closeCart()" class="text-neutral-500 hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div id="cartItems" class="p-6" style="max-height:calc(100vh - 160px); overflow-y:auto;">
+                <div id="cartEmpty" class="text-center py-20">
+                    <p class="text-neutral-600 text-xs">Sepetiniz boş</p>
+                </div>
+                <div id="cartList" class="space-y-3"></div>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-white/5">
+                <div class="flex justify-between mb-4">
+                    <span class="text-neutral-500 text-xs">Toplam</span>
+                    <span id="cartTot" class="font-mono font-bold text-sm">₺0</span>
+                </div>
+                <a href="cart.html" class="w-full bg-white text-black py-3 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors inline-block text-center">Sepeti Görüntüle</a>
+            </div>
+        </div>
+        <div id="cartOv" class="fixed inset-0 bg-black/70 z-40 hidden" onclick="closeCart()"></div>
+
+        <!-- ═══ PRIVACY PAGE ═══ -->
+        <section class="pt-32 pb-24 md:pt-40 md:pb-40">
+            <div class="max-w-4xl mx-auto px-5 md:px-10">
+                <div class="mb-12">
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Yasal</p>
+                    <h1 class="text-4xl md:text-6xl font-black tracking-tighter uppercase">GİZLİLİK POLİTİKASI</h1>
+                </div>
+
+                <div class="prose prose-invert max-w-none">
+                    <p class="text-neutral-500 text-sm leading-relaxed mb-8">
+                        Son güncelleme: 7 Mayıs 2025
+                    </p>
+
+                    <div class="space-y-8">
+                        <section id="intro">
+                            <h2 class="text-white text-xl font-bold mb-4">Giriş</h2>
+                            <p class="text-neutral-500 text-sm leading-relaxed">
+                                GNG ("biz", "şirket"), kişisel verilerinizi korumakta ciddiye almaktadır. Bu Gizlilik Politikası, web sitemizi ve hizmetlerimizi kullanırken kişisel verilerinizin nasıl toplandığını, kullanıldığını ve korunduğunu açıklamaktadır.
+                            </p>
+                        </section>
+
+                        <section id="data-collection">
+                            <h2 class="text-white text-xl font-bold mb-4">Veri Toplama</h2>
+                            <p class="text-neutral-500 text-sm leading-relaxed mb-4">
+                                Aşağıdaki kişisel verileri topluyoruz:
+                            </p>
+                            <ul class="text-neutral-500 text-sm leading-relaxed space-y-2 list-disc list-inside">
+                                <li>İsim ve soyisim</li>
+                                <li>E-posta adresi</li>
+                                <li>Telefon numarası</li>
+                                <li>Teslimat adresi</li>
+                                <li>Ödeme bilgileri (kredi kartı bilgileri güvenli ödeme sağlayıcıları üzerinden işlenir)</li>
+                                <li>IP adresi ve tarayıcı bilgileri</li>
+                            </ul>
+                        </section>
+
+                        <section id="data-usage">
+                            <h2 class="text-white text-xl font-bold mb-4">Veri Kullanımı</h2>
+                            <p class="text-neutral-500 text-sm leading-relaxed mb-4">
+                                Toplanan kişisel verilerinizi aşağıdaki amaçlarla kullanıyoruz:
+                            </p>
+                            <ul class="text-neutral-500 text-sm leading-relaxed space-y-2 list-disc list-inside">
+                                <li>Siparişlerinizi işlemek ve teslim etmek</li>
+                                <li>Hizlerimizi sağlamak ve geliştirmek</li>
+                                <li>Müşteri desteği sunmak</li>
+                                <li>Pazarlama ve promosyon iletişimleri (izininizle)</li>
+                                <li>Fraud ve güvenlik önlemleri</li>
+                                <li>Yasal gereklilikleri yerine getirmek</li>
+                            </ul>
+                        </section>
+
+                        <section id="data-sharing">
+                            <h2 class="text-white text-xl font-bold mb-4">Veri Paylaşımı</h2>
+                            <p class="text-neutral-500 text-sm leading-relaxed mb-4">
+                                Kişisel verilerinizi aşağıdaki durumlarla paylaşıyoruz:
+                            </p>
+                            <ul class="text-neutral-500 text-sm leading-relaxed space-y-2 list-disc list-inside">
+                                <li>Hizmet sağlayıcılar (kargo, ödeme işleme, vb.)</li>
+                                <li>Yasal gereklilikler durumunda yetkili merciler</li>
+                                <li>İş birliği yaptığımız güvenilir üçüncü şirketler</li>
+                            </ul>
+                            <p class="text-neutral-500 text-sm leading-relaxed mt-4">
+                                Kişisel verilerinizi asla üçüncü şahıslara satmıyoruz veya kiralamiyoruz.
+                            </p>
+                        </section>
+
+                        <section id="data-security">
+                            <h2 class="text-white text-xl font-bold mb-4">Veri Güvenliği</h2>
+                            <p class="text-neutral-500 text-sm leading-relaxed">
+                                Kişisel verilerinizi korumak için endüstri standartlarına uygun güvenlik önlemleri alıyoruz. SSL şifreleme, güvenli sunucular ve düzenli güvenlik denetimleri ile verilerinizi koruyoruz. Ancak, internet üzerinden hiçbir veri aktarımı %100 güvenli değildir ve bu konuda garanti veremeyiz.
+                            </p>
+                        </section>
+
+                        <section id="cookies">
+                            <h2 class="text-white text-xl font-bold mb-4">Çerezler</h2>
+                            <p class="text-neutral-500 text-sm leading-relaxed mb-4">
+                                Web sitemiz çerezleri kullanarak deneyiminizi iyileştirmek ve analiz etmek için kullanır. Çerezler hakkında daha fazla bilgi için Çerez Politikamızı inceleyebilirsiniz.
+                            </p>
+                            <ul class="text-neutral-500 text-sm leading-relaxed space-y-2 list-disc list-inside">
+                                <li>Zorunlu çerezler: Site temel işlevleri için gereklidir</li>
+                                <li>Analiz çerezleri: Site kullanımını analiz etmek için kullanılır</li>
+                                <li>Pazarlama çerezleri: Kişiselleştirilmiş içerik için kullanılır</li>
+                            </ul>
+                        </section>
+
+                        <section id="user-rights">
+                            <h2 class="text-white text-xl font-bold mb-4">Kullanıcı Hakları</h2>
+                            <p class="text-neutral-500 text-sm leading-relaxed mb-4">
+                                Kişisel verileriniz üzerinde aşağıdaki haklara sahipsiniz:
+                            </p>
+                            <ul class="text-neutral-500 text-sm leading-relaxed space-y-2 list-disc list-inside">
+                                <li>Verilerinize erişme</li>
+                                <li>Verilerinizi düzeltme</li>
+                                <li>Verilerinizi silme</li>
+                                <li>Veri işlenmesini kısıtlama</li>
+                                <li>Veri taşınabilirliği</li>
+                                <li>İtiraz etme</li>
+                            </ul>
+                            <p class="text-neutral-500 text-sm leading-relaxed mt-4">
+                                Bu hakları kullanmak için bizimle iletişime geçebilirsiniz.
+                            </p>
+                        </section>
+
+                        <section id="contact">
+                            <h2 class="text-white text-xl font-bold mb-4">İletişim</h2>
+                            <p class="text-neutral-500 text-sm leading-relaxed mb-4">
+                                Gizlilik politikamız hakkında sorularınız varsa, bizimle iletişime geçebilirsiniz:
+                            </p>
+                            <div class="space-y-2">
+                                <p class="text-neutral-500 text-sm">
+                                    <span class="text-white font-bold">E-posta:</span> privacy@gng.com
+                                </p>
+                                <p class="text-neutral-500 text-sm">
+                                    <span class="text-white font-bold">Adres:</span> GNG Tekstil San. Tic. Ltd. Şti., Moda Cad. No: 123, Kadıköy, İstanbul
+                                </p>
+                            </div>
+                        </section>
+
+                        <section id="changes">
+                            <h2 class="text-white text-xl font-bold mb-4">Değişiklikler</h2>
+                            <p class="text-neutral-500 text-sm leading-relaxed">
+                                Bu Gizlilik Politikasını zaman zaman güncelleyebiliriz. Değişiklikler web sitemizde yayınlandığında yürürlüğe girer. Lütfen düzenli olarak bu politikayı gözden geçirin.
+                            </p>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ FOOTER ═══ -->
+        <footer class="border-t border-white/5 pt-16 pb-8 bg-black">
+            <div class="max-w-7xl mx-auto px-5 md:px-10">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+                    <div class="col-span-2 md:col-span-1">
+                        <span class="font-mono font-bold text-2xl text-white">GNG</span>
+                        <p class="text-neutral-600 text-xs mt-4 leading-relaxed max-w-xs">Sokaktan doğan, şehrin nabzını taşıyan marka.</p>
+                        <div class="flex gap-3 mt-6">
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="instagram" class="w-3.5 h-3.5"></i></a>
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="twitter" class="w-3.5 h-3.5"></i></a>
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="youtube" class="w-3.5 h-3.5"></i></a>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Mağaza</h4>
+                        <ul class="space-y-2">
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Yeni Gelenler</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Hoodie</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">T-Shirt</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Pantolon</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Aksesuar</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Bilgi</h4>
+                        <ul class="space-y-2">
+                            <li><a href="../index.html#about" class="text-neutral-600 text-xs hover:text-white transition-colors">Hakkımızda</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Beden Rehberi</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Kargo</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">İade</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Yasal</h4>
+                        <ul class="space-y-2">
+                            <li><a href="privacy.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Gizlilik</a></li>
+                            <li><a href="terms.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Koşullar</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Çerez</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-neutral-700 text-[10px] font-mono">© 2025 GNG — GHETTO NEED GANGSTAZ</p>
+                    <div class="flex items-center gap-3 text-neutral-700">
+                        <span class="text-[10px] font-mono">VISA</span>
+                        <span class="text-[10px] font-mono">MC</span>
+                        <span class="text-[10px] font-mono">AMEX</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/components.js"></script>
+    <script src="../js/pages.js"></script>
+</body>
+</html>

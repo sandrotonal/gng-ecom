@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ödeme — GNG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        main: ['Manrope', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body class="bg-black text-white font-main" data-page="checkout">
+
+    <!-- TOAST -->
+    <div id="toast"></div>
+
+    <!-- ═══════════ SITE ═══════════ -->
+    <div id="site">
+
+        <!-- NAV -->
+        <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/5">
+            <div class="max-w-7xl mx-auto px-5 md:px-10 flex items-center justify-between h-16 md:h-20">
+                <a href="../index.html" class="font-mono font-bold text-lg md:text-xl text-white tracking-tight">GNG</a>
+                <div class="hidden lg:flex items-center gap-8">
+                    <a href="../index.html#drops" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Drops</a>
+                    <a href="../index.html#about" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Hakkında</a>
+                    <a href="../index.html#crew" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Kadro</a>
+                    <a href="../index.html#lookbook" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Lookbook</a>
+                    <a href="../index.html#events" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Etkinlikler</a>
+                    <a href="../index.html#faq" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">SSS</a>
+                    <a href="contact.html" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">İletişim</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="openCart()" class="relative p-2 text-neutral-500 hover:text-white transition-colors">
+                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                        <span id="cartN" class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-white text-black text-[9px] font-bold rounded-full flex items-center justify-center">0</span>
+                    </button>
+                    <button class="lg:hidden p-2 text-white" onclick="toggleMob()">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MOBILE MENU -->
+        <div id="mobMenu" class="fixed inset-0 z-40 bg-black flex flex-col items-center justify-center gap-6 lg:hidden">
+            <a href="../index.html#drops" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">DROPS</a>
+            <a href="../index.html#about" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">HAKKINDA</a>
+            <a href="../index.html#crew" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">KADRO</a>
+            <a href="../index.html#lookbook" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">LOOKBOOK</a>
+            <a href="../index.html#events" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">ETKİNLİKLER</a>
+            <a href="../index.html#faq" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">SSS</a>
+            <a href="contact.html" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">İLETİŞİM</a>
+            <div class="mt-8"><a href="#" class="text-neutral-600 hover:text-white transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a></div>
+        </div>
+
+        <!-- CART -->
+        <div id="cartBox" class="fixed top-0 right-0 h-full w-full max-w-sm bg-black border-l border-white/5 z-50">
+            <div class="flex items-center justify-between p-6 border-b border-white/5">
+                <span class="text-[10px] uppercase tracking-[0.3em] font-bold">Sepet</span>
+                <button onclick="closeCart()" class="text-neutral-500 hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div id="cartItems" class="p-6" style="max-height:calc(100vh - 160px); overflow-y:auto;">
+                <div id="cartEmpty" class="text-center py-20">
+                    <p class="text-neutral-600 text-xs">Sepetiniz boş</p>
+                </div>
+                <div id="cartList" class="space-y-3"></div>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-white/5">
+                <div class="flex justify-between mb-4">
+                    <span class="text-neutral-500 text-xs">Toplam</span>
+                    <span id="cartTot" class="font-mono font-bold text-sm">₺0</span>
+                </div>
+                <a href="cart.html" class="w-full bg-white text-black py-3 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors inline-block text-center">Sepeti Görüntüle</a>
+            </div>
+        </div>
+        <div id="cartOv" class="fixed inset-0 bg-black/70 z-40 hidden" onclick="closeCart()"></div>
+
+        <!-- ═══ CHECKOUT PAGE ═══ -->
+        <section class="pt-32 pb-24 md:pt-40 md:pb-40">
+            <div class="max-w-7xl mx-auto px-5 md:px-10">
+                <div class="mb-12">
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Alışveriş</p>
+                    <h1 class="text-4xl md:text-6xl font-black tracking-tighter uppercase">ÖDEME</h1>
+                </div>
+
+                <form id="checkoutForm" class="grid lg:grid-cols-3 gap-12">
+                    <!-- Checkout Form -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Contact Information -->
+                        <div class="border border-white/5 p-6">
+                            <h2 class="text-[10px] uppercase tracking-[0.3em] text-white font-bold mb-6">İLETİŞİM BİLGİLERİ</h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-neutral-500 text-xs mb-2 block">E-posta</label>
+                                    <input type="email" name="email" required placeholder="ornek@email.com">
+                                </div>
+                                <div>
+                                    <label class="text-neutral-500 text-xs mb-2 block">Telefon</label>
+                                    <input type="tel" name="phone" required placeholder="05XX XXX XX XX">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shipping Address -->
+                        <div class="border border-white/5 p-6">
+                            <h2 class="text-[10px] uppercase tracking-[0.3em] text-white font-bold mb-6">TESLİMAT ADRESİ</h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-neutral-500 text-xs mb-2 block">Ad Soyad</label>
+                                    <input type="text" name="fullName" required placeholder="Adınız Soyadınız">
+                                </div>
+                                <div>
+                                    <label class="text-neutral-500 text-xs mb-2 block">Adres</label>
+                                    <textarea name="address" required rows="3" placeholder="Adresiniz"></textarea>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-neutral-500 text-xs mb-2 block">İl</label>
+                                        <select name="city" required>
+                                            <option value="">Seçiniz</option>
+                                            <option value="istanbul">İstanbul</option>
+                                            <option value="ankara">Ankara</option>
+                                            <option value="izmir">İzmir</option>
+                                            <option value="bursa">Bursa</option>
+                                            <option value="antalya">Antalya</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="text-neutral-500 text-xs mb-2 block">İlçe</label>
+                                        <input type="text" name="district" required placeholder="İlçe">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-neutral-500 text-xs mb-2 block">Posta Kodu</label>
+                                        <input type="text" name="zipCode" required placeholder="XXXXX">
+                                    </div>
+                                    <div>
+                                        <label class="text-neutral-500 text-xs mb-2 block">TC Kimlik No</label>
+                                        <input type="text" name="tcNo" required placeholder="XXXXXXXXXXX">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="border border-white/5 p-6">
+                            <h2 class="text-[10px] uppercase tracking-[0.3em] text-white font-bold mb-6">ÖDEME YÖNTEMİ</h2>
+                            <div class="space-y-3">
+                                <label class="payment-method flex items-center gap-4 p-4 border border-white/5 cursor-pointer hover:border-white/15 transition-colors selected" data-method="card">
+                                    <input type="radio" name="paymentMethod" value="card" checked class="hidden">
+                                    <i data-lucide="credit-card" class="w-5 h-5"></i>
+                                    <span class="text-sm">Kredi Kartı / Banka Kartı</span>
+                                </label>
+                                <label class="payment-method flex items-center gap-4 p-4 border border-white/5 cursor-pointer hover:border-white/15 transition-colors" data-method="transfer">
+                                    <input type="radio" name="paymentMethod" value="transfer" class="hidden">
+                                    <i data-lucide="building-2" class="w-5 h-5"></i>
+                                    <span class="text-sm">Havale / EFT</span>
+                                </label>
+                                <label class="payment-method flex items-center gap-4 p-4 border border-white/5 cursor-pointer hover:border-white/15 transition-colors" data-method="cod">
+                                    <input type="radio" name="paymentMethod" value="cod" class="hidden">
+                                    <i data-lucide="package" class="w-5 h-5"></i>
+                                    <span class="text-sm">Kapıda Ödeme</span>
+                                </label>
+                            </div>
+
+                            <!-- Card Details -->
+                            <div id="cardDetails" class="payment-details mt-6 space-y-4">
+                                <div>
+                                    <label class="text-neutral-500 text-xs mb-2 block">Kart Üzerindeki İsim</label>
+                                    <input type="text" name="cardName" placeholder="AD SOYAD">
+                                </div>
+                                <div>
+                                    <label class="text-neutral-500 text-xs mb-2 block">Kart Numarası</label>
+                                    <input type="text" name="cardNumber" placeholder="XXXX XXXX XXXX XXXX" maxlength="19">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-neutral-500 text-xs mb-2 block">Son Kullanma</label>
+                                        <input type="text" name="cardExpiry" placeholder="AA/YY" maxlength="5">
+                                    </div>
+                                    <div>
+                                        <label class="text-neutral-500 text-xs mb-2 block">CVV</label>
+                                        <input type="text" name="cardCvv" placeholder="XXX" maxlength="3">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Transfer Details -->
+                            <div id="transferDetails" class="payment-details mt-6 hidden">
+                                <div class="bg-neutral-900/50 p-4 border border-white/5">
+                                    <p class="text-neutral-500 text-xs mb-2">Havale/EFT bilgileri:</p>
+                                    <p class="text-white text-sm font-mono mb-1">Banka: Garanti BBVA</p>
+                                    <p class="text-white text-sm font-mono mb-1">IBAN: TR12 3456 7890 1234 5678 9012 34</p>
+                                    <p class="text-white text-sm font-mono">Hesap Sahibi: GNG Tekstil San. Tic. Ltd. Şti.</p>
+                                </div>
+                            </div>
+
+                            <!-- COD Details -->
+                            <div id="codDetails" class="payment-details mt-6 hidden">
+                                <div class="bg-neutral-900/50 p-4 border border-white/5">
+                                    <p class="text-neutral-500 text-xs mb-2">Kapıda ödeme ücreti:</p>
+                                    <p class="text-white text-sm font-mono">₺29.90</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="lg:col-span-1">
+                        <div class="border border-white/5 p-6 sticky top-24">
+                            <h2 class="text-[10px] uppercase tracking-[0.3em] text-white font-bold mb-6">SİPARİŞ ÖZETİ</h2>
+                            
+                            <!-- Order Items -->
+                            <div class="space-y-4 mb-6">
+                                <div class="flex gap-3">
+                                    <div class="w-16 h-20 flex-shrink-0">
+                                        <img src="https://picsum.photos/seed/gng-d1/100/133.jpg" class="w-full h-full object-cover grs" alt="Oversized Hoodie">
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-white text-xs font-bold">Oversized Hoodie</p>
+                                        <p class="text-neutral-600 text-[10px] mt-1">Siyah / M</p>
+                                        <p class="text-neutral-500 text-[10px] mt-1">x1</p>
+                                    </div>
+                                    <p class="font-mono font-bold text-sm">₺1.890</p>
+                                </div>
+                                <div class="flex gap-3">
+                                    <div class="w-16 h-20 flex-shrink-0">
+                                        <img src="https://picsum.photos/seed/gng-d2/100/133.jpg" class="w-full h-full object-cover grs" alt="Graphic Tee">
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-white text-xs font-bold">Graphic Tee</p>
+                                        <p class="text-neutral-600 text-[10px] mt-1">Yıkanmış Siyah / L</p>
+                                        <p class="text-neutral-500 text-[10px] mt-1">x2</p>
+                                    </div>
+                                    <p class="font-mono font-bold text-sm">₺1.780</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4 mb-6 border-t border-white/5 pt-4">
+                                <div class="flex justify-between">
+                                    <span class="text-neutral-500 text-xs">Ara Toplam</span>
+                                    <span class="font-mono font-bold text-sm">₺3.670</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-neutral-500 text-xs">Kargo</span>
+                                    <span class="font-mono font-bold text-sm">Ücretsiz</span>
+                                </div>
+                                <div class="border-t border-white/5 pt-4 flex justify-between">
+                                    <span class="text-white text-xs font-bold">Toplam</span>
+                                    <span class="font-mono font-bold text-lg">₺3.670</span>
+                                </div>
+                            </div>
+
+                            <button type="submit" id="checkoutSubmit" class="w-full bg-white text-black py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors mb-4">
+                                Siparişi Tamamla
+                            </button>
+
+                            <p class="text-neutral-600 text-[10px] text-center">
+                                Siparişinizi tamamladığınızda e-posta adresinize onay gönderilecektir.
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ═══ FOOTER ═══ -->
+        <footer class="border-t border-white/5 pt-16 pb-8 bg-black">
+            <div class="max-w-7xl mx-auto px-5 md:px-10">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+                    <div class="col-span-2 md:col-span-1">
+                        <span class="font-mono font-bold text-2xl text-white">GNG</span>
+                        <p class="text-neutral-600 text-xs mt-4 leading-relaxed max-w-xs">Sokaktan doğan, şehrin nabzını taşıyan marka.</p>
+                        <div class="flex gap-3 mt-6">
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="instagram" class="w-3.5 h-3.5"></i></a>
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="twitter" class="w-3.5 h-3.5"></i></a>
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="youtube" class="w-3.5 h-3.5"></i></a>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Mağaza</h4>
+                        <ul class="space-y-2">
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Yeni Gelenler</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Hoodie</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">T-Shirt</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Pantolon</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Aksesuar</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Bilgi</h4>
+                        <ul class="space-y-2">
+                            <li><a href="../index.html#about" class="text-neutral-600 text-xs hover:text-white transition-colors">Hakkımızda</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Beden Rehberi</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Kargo</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">İade</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Yasal</h4>
+                        <ul class="space-y-2">
+                            <li><a href="privacy.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Gizlilik</a></li>
+                            <li><a href="terms.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Koşullar</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Çerez</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-neutral-700 text-[10px] font-mono">© 2025 GNG — GHETTO NEED GANGSTAZ</p>
+                    <div class="flex items-center gap-3 text-neutral-700">
+                        <span class="text-[10px] font-mono">VISA</span>
+                        <span class="text-[10px] font-mono">MC</span>
+                        <span class="text-[10px] font-mono">AMEX</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/components.js"></script>
+    <script src="../js/pages.js"></script>
+</body>
+</html>

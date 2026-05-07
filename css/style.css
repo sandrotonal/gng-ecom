@@ -1,0 +1,131 @@
+/* ═══════════════════════════════════════════════════════════════
+   GNG — GHETTO NEED GANGSTAZ
+   Ana Stil Dosyası
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═══ TEMEL AYARLAR ═══ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+::selection { background: #fff; color: #000; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #333; }
+
+/* ═══ BODY ═══ */
+body {
+    background: #000;
+    color: #fff;
+    font-family: 'Manrope', sans-serif;
+    overflow: hidden;
+}
+
+/* ═══ NOISE EFEKTİ ═══ */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ═══ GRAYSCALE EFEKTİ ═══ */
+.grs { filter: grayscale(100%) contrast(1.1) brightness(0.8); }
+
+/* ═══ REVEAL ANİMASYONLARI ═══ */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.on { opacity: 1; transform: translateY(0); }
+
+.line-reveal {
+    width: 0;
+    height: 1px;
+    background: #333;
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.line-reveal.on { width: 100%; }
+
+/* ═══ MARQUEE ANİMASYONU ═══ */
+.marquee-inner { display: flex; animation: scroll 30s linear infinite; }
+@keyframes scroll { 0%{transform:translateX(0)}100%{transform:translateX(-50%)} }
+
+/* ═══ SPLASH EKRANI ═══ */
+#splash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transition: opacity 1s ease, visibility 1s ease;
+}
+#splash.done { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.splash-ring {
+    width: 120px;
+    height: 120px;
+    border: 2px solid #222;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.splash-pct {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: #444;
+    margin-top: 24px;
+}
+
+.splash-enter {
+    margin-top: 32px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+.splash-enter.show { opacity: 1; }
+
+.enter-btn {
+    font-family: 'Manrope', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: #fff;
+    background: transparent;
+    border: 1px solid #333;
+    padding: 16px 56px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.enter-btn:hover { border-color: #fff; background: #fff; color: #000; }
+
+/* ═══ TOAST BİLDİRİM ═══ */
+#toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #fff;
+    color: #000;
+    padding: 14px 28px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    z-index: 10001;
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+#toast.up { transform: translateX(-50%) translateY(0); }
+
+/* ═══ SITE KONTEYNER ═══ */
+#site {
+    opacity: 0;
+    transition: opacity 0.8s ease 0.3s;
+}

@@ -1,0 +1,571 @@
+/* ═══════════════════════════════════════════════════════════════
+   GNG — GHETTO NEED GANGSTAZ
+   Sayfa Stilleri
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═══ HERO BÖLÜMÜ ═══ */
+#hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding-top: 96px;
+}
+#hero .hero-bg {
+    position: absolute;
+    inset: 0;
+}
+#hero .hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+#hero .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+}
+#hero .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 0 20px;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+#hero .hero-logo {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    margin: 0 auto 32px;
+}
+#hero .hero-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+#hero .hero-title {
+    font-size: clamp(3rem, 10vw, 9rem);
+    font-weight: 900;
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+}
+#hero .hero-subtitle {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    max-width: 400px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+}
+#hero .hero-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+@media (min-width: 640px) {
+    #hero .hero-cta {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+/* ═══ DROPS BÖLÜMÜ ═══ */
+#drops {
+    padding: 96px 0;
+}
+#drops .drops-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 64px;
+}
+#drops .drops-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+@media (min-width: 1024px) {
+    #drops .drops-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+}
+
+/* ═══ ABOUT BÖLÜMÜ ═══ */
+#about {
+    padding: 96px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+#about .about-grid {
+    display: grid;
+    gap: 48px;
+    align-items: center;
+}
+@media (min-width: 768px) {
+    #about .about-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 80px;
+    }
+}
+#about .about-image {
+    position: relative;
+}
+#about .about-image img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+}
+#about .about-image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%);
+    height: 33.333%;
+}
+#about .about-timeline {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+#about .timeline-item {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+#about .timeline-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    width: 48px;
+    flex-shrink: 0;
+}
+#about .timeline-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+#about .timeline-text {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+}
+
+/* ═══ CREW BÖLÜMÜ ═══ */
+#crew {
+    padding: 96px 0;
+    background: #000;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+#crew .crew-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+@media (min-width: 768px) {
+    #crew .crew-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+    }
+}
+#crew .crew-card-image {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+#crew .crew-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+#crew .crew-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+}
+#crew .crew-name {
+    font-weight: 900;
+    font-size: 14px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+}
+#crew .crew-role {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: 'Space Mono', monospace;
+    margin-top: 4px;
+}
+
+/* ═══ LOOKBOOK BÖLÜMÜ ═══ */
+#lookbook {
+    padding: 96px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+#lookbook .lookbook-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+@media (min-width: 768px) {
+    #lookbook .lookbook-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+}
+#lookbook .lookbook-item {
+    position: relative;
+    overflow: hidden;
+}
+#lookbook .lookbook-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s ease;
+}
+#lookbook .lookbook-item:hover img {
+    transform: scale(1.05);
+}
+#lookbook .lookbook-item-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.5s ease;
+}
+#lookbook .lookbook-item:hover .lookbook-item-overlay {
+    background: rgba(0, 0, 0, 0.3);
+}
+#lookbook .lookbook-item-large {
+    grid-row: span 2;
+}
+
+/* ═══ EVENTS BÖLÜMÜ ═══ */
+#events {
+    padding: 96px 0;
+    background: #000;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+#events .events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+#events .event-card {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: border-color 0.3s ease;
+}
+#events .event-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+@media (min-width: 768px) {
+    #events .event-card {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+#events .event-date {
+    width: 96px;
+    flex-shrink: 0;
+}
+#events .event-day {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 20px;
+    color: #fff;
+}
+#events .event-month {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: 'Space Mono', monospace;
+}
+#events .event-info {
+    flex: 1;
+}
+#events .event-title {
+    font-weight: 700;
+    color: #fff;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+}
+#events .event-description {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* ═══ SIZE GUIDE BÖLÜMÜ ═══ */
+.size-guide {
+    padding: 96px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.size-guide .size-table-container {
+    overflow-x: auto;
+}
+.size-guide .size-table {
+    min-width: 480px;
+    text-align: center;
+}
+
+/* ═══ FAQ BÖLÜMÜ ═══ */
+#faq {
+    padding: 96px 0;
+    background: #000;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+#faq .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+#faq .faq-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+#faq .faq-question {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+#faq .faq-question:hover {
+    color: rgba(255, 255, 255, 0.7);
+}
+#faq .faq-answer {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    line-height: 1.6;
+    padding-bottom: 20px;
+}
+
+/* ═══ INSTAGRAM BÖLÜMÜ ═══ */
+.instagram-section {
+    padding: 96px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.instagram-section .instagram-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+}
+@media (min-width: 768px) {
+    .instagram-section .instagram-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+.instagram-section .instagram-item {
+    position: relative;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+}
+.instagram-section .instagram-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.instagram-section .instagram-item:hover img {
+    transform: scale(1.1);
+}
+.instagram-section .instagram-item-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.5s ease;
+}
+.instagram-section .instagram-item:hover .instagram-item-overlay {
+    background: rgba(0, 0, 0, 0.4);
+}
+.instagram-section .instagram-icon {
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+.instagram-section .instagram-item:hover .instagram-icon {
+    opacity: 1;
+}
+
+/* ═══ NEWSLETTER BÖLÜMÜ ═══ */
+#contact {
+    padding: 96px 0;
+    background: #000;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+#contact .newsletter-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.02;
+    pointer-events: none;
+}
+#contact .newsletter-bg-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 25vw;
+    font-weight: 900;
+    color: #fff;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    user-select: none;
+}
+#contact .newsletter-content {
+    position: relative;
+    z-index: 10;
+    max-width: 448px;
+    margin: 0 auto;
+    text-align: center;
+}
+#contact .newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+@media (min-width: 640px) {
+    #contact .newsletter-form {
+        flex-direction: row;
+    }
+}
+
+/* ═══ FOOTER ═══ */
+footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 64px;
+    padding-bottom: 32px;
+    background: #000;
+}
+footer .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    margin-bottom: 64px;
+}
+@media (min-width: 768px) {
+    footer .footer-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+footer .footer-brand {
+    grid-column: span 2;
+}
+@media (min-width: 768px) {
+    footer .footer-brand {
+        grid-column: span 1;
+    }
+}
+footer .footer-logo {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 24px;
+    color: #fff;
+}
+footer .footer-description {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    margin-top: 16px;
+    line-height: 1.6;
+    max-width: 256px;
+}
+footer .footer-social {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+footer .footer-social-link {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+footer .footer-social-link:hover {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+footer .footer-heading {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+footer .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+footer .footer-link {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    transition: color 0.3s ease;
+}
+footer .footer-link:hover {
+    color: #fff;
+}
+footer .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+@media (min-width: 768px) {
+    footer .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+footer .footer-copyright {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+}
+footer .footer-payments {
+    display: flex;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+}

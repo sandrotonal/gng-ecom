@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — GNG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        main: ['Manrope', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body class="bg-black text-white font-main" data-page="blog">
+
+    <!-- TOAST -->
+    <div id="toast"></div>
+
+    <!-- ═══════════ SITE ═══════════ -->
+    <div id="site">
+
+        <!-- NAV -->
+        <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/5">
+            <div class="max-w-7xl mx-auto px-5 md:px-10 flex items-center justify-between h-16 md:h-20">
+                <a href="../index.html" class="font-mono font-bold text-lg md:text-xl text-white tracking-tight">GNG</a>
+                <div class="hidden lg:flex items-center gap-8">
+                    <a href="../index.html#drops" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Drops</a>
+                    <a href="../index.html#about" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Hakkında</a>
+                    <a href="../index.html#crew" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Kadro</a>
+                    <a href="../index.html#lookbook" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Lookbook</a>
+                    <a href="../index.html#events" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Etkinlikler</a>
+                    <a href="../index.html#faq" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">SSS</a>
+                    <a href="contact.html" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">İletişim</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="openCart()" class="relative p-2 text-neutral-500 hover:text-white transition-colors">
+                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                        <span id="cartN" class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-white text-black text-[9px] font-bold rounded-full flex items-center justify-center">0</span>
+                    </button>
+                    <button class="lg:hidden p-2 text-white" onclick="toggleMob()">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MOBILE MENU -->
+        <div id="mobMenu" class="fixed inset-0 z-40 bg-black flex flex-col items-center justify-center gap-6 lg:hidden">
+            <a href="../index.html#drops" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">DROPS</a>
+            <a href="../index.html#about" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">HAKKINDA</a>
+            <a href="../index.html#crew" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">KADRO</a>
+            <a href="../index.html#lookbook" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">LOOKBOOK</a>
+            <a href="../index.html#events" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">ETKİNLİKLER</a>
+            <a href="../index.html#faq" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">SSS</a>
+            <a href="contact.html" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">İLETİŞİM</a>
+            <div class="mt-8"><a href="#" class="text-neutral-600 hover:text-white transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a></div>
+        </div>
+
+        <!-- CART -->
+        <div id="cartBox" class="fixed top-0 right-0 h-full w-full max-w-sm bg-black border-l border-white/5 z-50">
+            <div class="flex items-center justify-between p-6 border-b border-white/5">
+                <span class="text-[10px] uppercase tracking-[0.3em] font-bold">Sepet</span>
+                <button onclick="closeCart()" class="text-neutral-500 hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div id="cartItems" class="p-6" style="max-height:calc(100vh - 160px); overflow-y:auto;">
+                <div id="cartEmpty" class="text-center py-20">
+                    <p class="text-neutral-600 text-xs">Sepetiniz boş</p>
+                </div>
+                <div id="cartList" class="space-y-3"></div>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-white/5">
+                <div class="flex justify-between mb-4">
+                    <span class="text-neutral-500 text-xs">Toplam</span>
+                    <span id="cartTot" class="font-mono font-bold text-sm">₺0</span>
+                </div>
+                <a href="cart.html" class="w-full bg-white text-black py-3 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors inline-block text-center">Sepeti Görüntüle</a>
+            </div>
+        </div>
+        <div id="cartOv" class="fixed inset-0 bg-black/70 z-40 hidden" onclick="closeCart()"></div>
+
+        <!-- ═══ BLOG PAGE ═══ -->
+        <section class="pt-32 pb-24 md:pt-40 md:pb-40">
+            <div class="max-w-7xl mx-auto px-5 md:px-10">
+                <div class="mb-12">
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Haberler</p>
+                    <h1 class="text-4xl md:text-6xl font-black tracking-tighter uppercase">BLOG</h1>
+                </div>
+
+                <!-- Blog Filters -->
+                <div class="flex flex-wrap gap-3 mb-8">
+                    <button class="category-filter px-4 py-2 border border-white/10 text-white text-[10px] uppercase tracking-widest font-bold hover:border-white/30 transition-colors active" data-category="all">Tümü</button>
+                    <button class="category-filter px-4 py-2 border border-white/10 text-neutral-500 text-[10px] uppercase tracking-widest font-bold hover:border-white/30 transition-colors" data-category="drops">Drops</button>
+                    <button class="category-filter px-4 py-2 border border-white/10 text-neutral-500 text-[10px] uppercase tracking-widest font-bold hover:border-white/30 transition-colors" data-category="events">Etkinlikler</button>
+                    <button class="category-filter px-4 py-2 border border-white/10 text-neutral-500 text-[10px] uppercase tracking-widest font-bold hover:border-white/30 transition-colors" data-category="behind">Kulis</button>
+                    <button class="category-filter px-4 py-2 border border-white/10 text-neutral-500 text-[10px] uppercase tracking-widest font-bold hover:border-white/30 transition-colors" data-category="culture">Kültür</button>
+                </div>
+
+                <!-- Blog Search -->
+                <div class="mb-12">
+                    <input type="text" id="blogSearch" placeholder="Ara..." class="w-full bg-transparent border border-white/10 px-5 py-4 text-white text-xs placeholder:text-neutral-600 focus:outline-none focus:border-white/30 transition-colors font-mono">
+                </div>
+
+                <!-- Blog Posts -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Blog Post 1 -->
+                    <article class="blog-post border border-white/5 overflow-hidden group" data-category="drops">
+                        <div class="relative aspect-[4/3] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-blog-1/800/600.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-105" alt="SS25 Drop">
+                            <div class="absolute top-4 left-4">
+                                <span class="px-3 py-1 bg-white text-black text-[9px] uppercase tracking-widest font-bold rounded">Drops</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-neutral-600 text-[10px] font-mono mb-2">15 Mart 2025</p>
+                            <h3 class="blog-title text-white text-lg font-bold mb-3 uppercase tracking-tight">SS25 Drop Yayında</h3>
+                            <p class="blog-excerpt text-neutral-500 text-sm leading-relaxed mb-4">Yeni sezon koleksiyonumuzla tanışın. Sokak stili ve kalitenin mükemmel uyumu.</p>
+                            <a href="#" class="text-white text-[10px] uppercase tracking-widest font-bold hover:underline">Devamını Oku</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog Post 2 -->
+                    <article class="blog-post border border-white/5 overflow-hidden group" data-category="events">
+                        <div class="relative aspect-[4/3] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-blog-2/800/600.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-105" alt="Launch Party">
+                            <div class="absolute top-4 left-4">
+                                <span class="px-3 py-1 bg-white text-black text-[9px] uppercase tracking-widest font-bold rounded">Etkinlikler</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-neutral-600 text-[10px] font-mono mb-2">10 Mart 2025</p>
+                            <h3 class="blog-title text-white text-lg font-bold mb-3 uppercase tracking-tight">SS25 Launch Party</h3>
+                            <p class="blog-excerpt text-neutral-500 text-sm leading-relaxed mb-4">Yeni sezonumuzun lansman partisi. Canlı DJ performansları ve limited sürprizler.</p>
+                            <a href="#" class="text-white text-[10px] uppercase tracking-widest font-bold hover:underline">Devamını Oku</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog Post 3 -->
+                    <article class="blog-post border border-white/5 overflow-hidden group" data-category="behind">
+                        <div class="relative aspect-[4/3] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-blog-3/800/600.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-105" alt="Behind the Scenes">
+                            <div class="absolute top-4 left-4">
+                                <span class="px-3 py-1 bg-white text-black text-[9px] uppercase tracking-widest font-bold rounded">Kulis</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-neutral-600 text-[10px] font-mono mb-2">5 Mart 2025</p>
+                            <h3 class="blog-title text-white text-lg font-bold mb-3 uppercase tracking-tight">Kulis: SS25 Tasarım Süreci</h3>
+                            <p class="blog-excerpt text-neutral-500 text-sm leading-relaxed mb-4">Yeni koleksiyonumuzun tasarım sürecini yakından takip edin. İlham ve yaratıcılık.</p>
+                            <a href="#" class="text-white text-[10px] uppercase tracking-widest font-bold hover:underline">Devamını Oku</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog Post 4 -->
+                    <article class="blog-post border border-white/5 overflow-hidden group" data-category="culture">
+                        <div class="relative aspect-[4/3] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-blog-4/800/600.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-105" alt="Street Culture">
+                            <div class="absolute top-4 left-4">
+                                <span class="px-3 py-1 bg-white text-black text-[9px] uppercase tracking-widest font-bold rounded">Kültür</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-neutral-600 text-[10px] font-mono mb-2">28 Şubat 2025</p>
+                            <h3 class="blog-title text-white text-lg font-bold mb-3 uppercase tracking-tight">Sokak Kültürü ve Moda</h3>
+                            <p class="blog-excerpt text-neutral-500 text-sm leading-relaxed mb-4">Sokak kültürünün moda dünyasındaki etkisi ve GNG'nin bu hareketteki yeri.</p>
+                            <a href="#" class="text-white text-[10px] uppercase tracking-widest font-bold hover:underline">Devamını Oku</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog Post 5 -->
+                    <article class="blog-post border border-white/5 overflow-hidden group" data-category="drops">
+                        <div class="relative aspect-[4/3] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-blog-5/800/600.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-105" alt="Limited Drop">
+                            <div class="absolute top-4 left-4">
+                                <span class="px-3 py-1 bg-white text-black text-[9px] uppercase tracking-widest font-bold rounded">Drops</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-neutral-600 text-[10px] font-mono mb-2">20 Şubat 2025</p>
+                            <h3 class="blog-title text-white text-lg font-bold mb-3 uppercase tracking-tight">Limited Drop: Collab</h3>
+                            <p class="blog-excerpt text-neutral-500 text-sm leading-relaxed mb-4">Özel iş birliği koleksiyonumuz. Sınırlı sayıda üretilen parçalar şimdi satışta.</p>
+                            <a href="#" class="text-white text-[10px] uppercase tracking-widest font-bold hover:underline">Devamını Oku</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog Post 6 -->
+                    <article class="blog-post border border-white/5 overflow-hidden group" data-category="behind">
+                        <div class="relative aspect-[4/3] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-blog-6/800/600.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-105" alt="Production">
+                            <div class="absolute top-4 left-4">
+                                <span class="px-3 py-1 bg-white text-black text-[9px] uppercase tracking-widest font-bold rounded">Kulis</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-neutral-600 text-[10px] font-mono mb-2">15 Şubat 2025</p>
+                            <h3 class="blog-title text-white text-lg font-bold mb-3 uppercase tracking-tight">Üretim Süreci</h3>
+                            <p class="blog-excerpt text-neutral-500 text-sm leading-relaxed mb-4">GNG ürünlerinin üretim sürecini yakından inceleyin. Kalite ve sürdürülebilirlik.</p>
+                            <a href="#" class="text-white text-[10px] uppercase tracking-widest font-bold hover:underline">Devamını Oku</a>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Load More -->
+                <div class="mt-12 text-center">
+                    <button class="border border-white/10 text-white px-10 py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:border-white/30 transition-colors">
+                        Daha Fazla Yükle
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ FOOTER ═══ -->
+        <footer class="border-t border-white/5 pt-16 pb-8 bg-black">
+            <div class="max-w-7xl mx-auto px-5 md:px-10">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+                    <div class="col-span-2 md:col-span-1">
+                        <span class="font-mono font-bold text-2xl text-white">GNG</span>
+                        <p class="text-neutral-600 text-xs mt-4 leading-relaxed max-w-xs">Sokaktan doğan, şehrin nabzını taşıyan marka.</p>
+                        <div class="flex gap-3 mt-6">
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="instagram" class="w-3.5 h-3.5"></i></a>
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="twitter" class="w-3.5 h-3.5"></i></a>
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="youtube" class="w-3.5 h-3.5"></i></a>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Mağaza</h4>
+                        <ul class="space-y-2">
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Yeni Gelenler</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Hoodie</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">T-Shirt</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Pantolon</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Aksesuar</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Bilgi</h4>
+                        <ul class="space-y-2">
+                            <li><a href="../index.html#about" class="text-neutral-600 text-xs hover:text-white transition-colors">Hakkımızda</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Beden Rehberi</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Kargo</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">İade</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Yasal</h4>
+                        <ul class="space-y-2">
+                            <li><a href="privacy.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Gizlilik</a></li>
+                            <li><a href="terms.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Koşullar</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Çerez</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-neutral-700 text-[10px] font-mono">© 2025 GNG — GHETTO NEED GANGSTAZ</p>
+                    <div class="flex items-center gap-3 text-neutral-700">
+                        <span class="text-[10px] font-mono">VISA</span>
+                        <span class="text-[10px] font-mono">MC</span>
+                        <span class="text-[10px] font-mono">AMEX</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/components.js"></script>
+    <script src="../js/pages.js"></script>
+</body>
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNG — Ghetto Need Gangstaz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        main: ['Manrope', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        ::selection { background: #fff; color: #000; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+
+        /* ═══ SPLASH ═══ */
+        #splash {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #000; display: flex;
+            align-items: center; justify-content: center;
+            flex-direction: column;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+        #splash.done { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        .splash-ring {
+            width: 120px; height: 120px;
+            border: 2px solid #222; border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .splash-pct {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px; letter-spacing: 0.3em;
+            color: #444; margin-top: 24px;
+        }
+
+        .splash-enter {
+            margin-top: 32px; opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .splash-enter.show { opacity: 1; }
+
+        .enter-btn {
+            font-family: 'Manrope', sans-serif;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 0.4em; text-transform: uppercase;
+            color: #fff; background: transparent;
+            border: 1px solid #333; padding: 16px 56px;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .enter-btn:hover { border-color: #fff; background: #fff; color: #000; }
+
+        /* ═══ GENERAL ═══ */
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.on { opacity: 1; transform: translateY(0); }
+
+        .line-reveal {
+            width: 0; height: 1px; background: #333;
+            transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .line-reveal.on { width: 100%; }
+
+        /* ═══ MARQUEE ═══ */
+        .marquee-inner { display: flex; animation: scroll 30s linear infinite; }
+        @keyframes scroll { 0%{transform:translateX(0)}100%{transform:translateX(-50%)} }
+
+        /* ═══ PRODUCT ═══ */
+        .prod { position: relative; overflow: hidden; cursor: pointer; }
+        .prod img { transition: transform 0.7s cubic-bezier(0.16,1,0.3,1), filter 0.7s ease; }
+        .prod:hover img { transform: scale(1.04); filter: grayscale(0%) contrast(1) brightness(1); }
+        .prod-over {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
+            opacity: 0; transition: opacity 0.4s ease;
+            display: flex; align-items: flex-end; padding: 20px;
+        }
+        .prod:hover .prod-over { opacity: 1; }
+
+        /* ═══ MOBILE MENU ═══ */
+        #mobMenu {
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+        }
+        #mobMenu.open { transform: translateX(0); }
+
+        /* ═══ FAQ ═══ */
+        .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+        .faq-a.open { max-height: 300px; }
+        .faq-i { transition: transform 0.3s ease; }
+        .faq-i.rot { transform: rotate(45deg); }
+
+        /* ═══ PROFILE ═══ */
+        .prof:hover .prof-img { filter: grayscale(0%) brightness(1); }
+        .prof-img { filter: grayscale(100%) brightness(0.8); transition: filter 0.5s ease; }
+
+        /* ═══ CART ═══ */
+        #cartBox { transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+        #cartBox.open { transform: translateX(0); }
+
+        /* ═══ TOAST ═══ */
+        #toast {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #fff; color: #000; padding: 14px 28px;
+            font-family: 'Manrope', sans-serif; font-size: 12px;
+            font-weight: 700; letter-spacing: 0.1em; z-index: 10001;
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        #toast.up { transform: translateX(-50%) translateY(0); }
+
+        /* ═══ NOISE ═══ */
+        body::after {
+            content: ''; position: fixed; inset: 0; z-index: 9998;
+            pointer-events: none; opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .grs { filter: grayscale(100%) contrast(1.1) brightness(0.8); }
+    </style>
+</head>
+<body class="bg-black text-white font-main" style="overflow:hidden;">
+
+    <!-- TOAST -->
+    <div id="toast"></div>
+
+    <!-- ═══════════ SPLASH ═══════════ -->
+    <div id="splash">
+        <div class="splash-ring"></div>
+        <div class="splash-pct" id="sPct">0%</div>
+        <div class="splash-enter" id="sEnter">
+            <button class="enter-btn" id="enterBtn">GİRİŞ</button>
+        </div>
+    </div>
+
+    <!-- ═══════════ SITE ═══════════ -->
+    <div id="site" style="opacity:0; transition: opacity 0.8s ease 0.3s;">
+
+        <!-- NAV -->
+        <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/5">
+            <div class="max-w-7xl mx-auto px-5 md:px-10 flex items-center justify-between h-16 md:h-20">
+                <a href="#hero" class="font-mono font-bold text-lg md:text-xl text-white tracking-tight">GNG</a>
+                <div class="hidden lg:flex items-center gap-8">
+                    <a href="#drops" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Drops</a>
+                    <a href="#about" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Hakkında</a>
+                    <a href="#crew" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Kadro</a>
+                    <a href="#lookbook" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Lookbook</a>
+                    <a href="#events" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Etkinlikler</a>
+                    <a href="#faq" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">SSS</a>
+                    <a href="pages/contact.html" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">İletişim</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="openCart()" class="relative p-2 text-neutral-500 hover:text-white transition-colors">
+                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                        <span id="cartN" class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-white text-black text-[9px] font-bold rounded-full flex items-center justify-center">0</span>
+                    </button>
+                    <button class="lg:hidden p-2 text-white" onclick="toggleMob()">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MOBILE MENU -->
+        <div id="mobMenu" class="fixed inset-0 z-40 bg-black flex flex-col items-center justify-center gap-6 lg:hidden">
+            <a href="#drops" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">DROPS</a>
+            <a href="#about" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">HAKKINDA</a>
+            <a href="#crew" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">KADRO</a>
+            <a href="#lookbook" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">LOOKBOOK</a>
+            <a href="#events" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">ETKİNLİKLER</a>
+            <a href="#faq" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">SSS</a>
+            <a href="pages/contact.html" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">İLETİŞİM</a>
+            <div class="mt-8"><a href="#" class="text-neutral-600 hover:text-white transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a></div>
+        </div>
+
+        <!-- CART -->
+        <div id="cartBox" class="fixed top-0 right-0 h-full w-full max-w-sm bg-black border-l border-white/5 z-50">
+            <div class="flex items-center justify-between p-6 border-b border-white/5">
+                <span class="text-[10px] uppercase tracking-[0.3em] font-bold">Sepet</span>
+                <button onclick="closeCart()" class="text-neutral-500 hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div id="cartItems" class="p-6" style="max-height:calc(100vh - 160px); overflow-y:auto;">
+                <div id="cartEmpty" class="text-center py-20">
+                    <p class="text-neutral-600 text-xs">Sepetiniz boş</p>
+                </div>
+                <div id="cartList" class="space-y-3"></div>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-white/5">
+                <div class="flex justify-between mb-4">
+                    <span class="text-neutral-500 text-xs">Toplam</span>
+                    <span id="cartTot" class="font-mono font-bold text-sm">₺0</span>
+                </div>
+                <button class="w-full bg-white text-black py-3 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors">Satın Al</button>
+            </div>
+        </div>
+        <div id="cartOv" class="fixed inset-0 bg-black/70 z-40 hidden" onclick="closeCart()"></div>
+
+        <!-- MARQUEE -->
+        <div class="fixed top-16 md:top-20 left-0 right-0 z-30 border-b border-white/5 py-2 overflow-hidden">
+            <div class="marquee-inner">
+                <span class="whitespace-nowrap text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono px-8">SS25 DROP YAYINDA — ÜCRETSİZ KARGO ₺1500 ÜZERİ — LIMITED EDITION — GNG ORIGINALS — STREET CULTURE — </span>
+                <span class="whitespace-nowrap text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono px-8">SS25 DROP YAYINDA — ÜCRETSİZ KARGO ₺1500 ÜZERİ — LIMITED EDITION — GNG ORIGINALS — STREET CULTURE — </span>
+                <span class="whitespace-nowrap text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono px-8">SS25 DROP YAYINDA — ÜCRETSİZ KARGO ₺1500 ÜZERİ — LIMITED EDITION — GNG ORIGINALS — STREET CULTURE — </span>
+            </div>
+        </div>
+
+        <!-- ═══ HERO ═══ -->
+        <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-24">
+            <div class="absolute inset-0">
+                <img src="https://picsum.photos/seed/gng-dark-hero/1920/1080.jpg" class="w-full h-full object-cover grs" alt="">
+                <div class="absolute inset-0 bg-black/70"></div>
+            </div>
+            <div class="relative z-10 text-center px-5 max-w-5xl mx-auto">
+                <!-- Logo Circle -->
+                <div class="reveal mb-8 flex justify-center">
+                    <div class="w-28 h-28 md:w-36 md:h-36 rounded-full border border-white/10 flex items-center justify-center overflow-hidden bg-black/50 backdrop-blur-sm">
+                        <img src="https://picsum.photos/seed/gng-logo-icon/200/200.jpg" class="w-full h-full object-cover grs" alt="">
+                    </div>
+                </div>
+                <p class="reveal text-[10px] md:text-xs uppercase tracking-[0.5em] text-neutral-500 mb-6 font-mono">Yakında</p>
+                <h1 class="reveal text-[clamp(3rem,10vw,9rem)] font-black leading-[0.85] tracking-tighter uppercase">
+                    <span class="text-white">GHETTO</span><br>
+                    <span class="text-white">NEED</span><br>
+                    <span class="text-neutral-600">GANGSTAZ</span>
+                </h1>
+                <p class="reveal text-neutral-500 text-sm md:text-base mt-8 max-w-md mx-auto leading-relaxed">
+                    Sokaktan doğan, şehrin nabzını taşıyan marka.
+                </p>
+                <div class="reveal mt-10 flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="#drops" class="bg-white text-black px-10 py-4 text-[10px] uppercase tracking-[0.25em] font-bold hover:bg-neutral-200 transition-colors inline-flex items-center justify-center gap-2">
+                        Koleksiyon <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    </a>
+                    <a href="pages/contact.html" class="border border-white/10 text-white px-10 py-4 text-[10px] uppercase tracking-[0.25em] font-bold hover:border-white/30 transition-colors inline-flex items-center justify-center gap-2">
+                        Haberdar Ol
+                    </a>
+                </div>
+            </div>
+            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+                <i data-lucide="chevron-down" class="w-4 h-4 text-neutral-600"></i>
+            </div>
+        </section>
+
+        <!-- ═══ NEW DROPS ═══ -->
+        <section id="drops" class="py-24 md:py-40 bg-black">
+            <div class="max-w-7xl mx-auto px-5 md:px-10">
+                <div class="reveal flex items-end justify-between mb-12 md:mb-16">
+                    <div>
+                        <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Yeni Sezon</p>
+                        <h2 class="text-4xl md:text-7xl font-black tracking-tighter uppercase">DROPS</h2>
+                    </div>
+                    <a href="pages/cart.html" class="hidden md:flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-neutral-500 hover:text-white transition-colors">
+                        Tümü <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                    </a>
+                </div>
+                <div class="line-reveal mb-12"></div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
+                    <div class="reveal prod bg-neutral-950 border border-white/5">
+                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-d1/600/800.jpg" class="w-full h-full object-cover grs" alt="">
+                            <div class="prod-over">
+                                <button onclick="event.preventDefault(); addCart('Oversized Hoodie',1890)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                            </div>
+                            <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Yeni</span>
+                        </a>
+                        <div class="p-3 md:p-4">
+                            <h3 class="font-bold text-xs md:text-sm text-white">Oversized Hoodie</h3>
+                            <p class="text-neutral-600 text-[10px] mt-1">Siyah / Ağır Pamuk</p>
+                            <p class="text-white font-mono font-bold text-xs mt-2">₺1.890</p>
+                        </div>
+                    </div>
+                    <div class="reveal prod bg-neutral-950 border border-white/5">
+                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-d2/600/800.jpg" class="w-full h-full object-cover grs" alt="">
+                            <div class="prod-over">
+                                <button onclick="event.preventDefault(); addCart('Graphic Tee',890)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                            </div>
+                            <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-neutral-800 text-neutral-400 px-2 py-1">Tükendi</span>
+                        </a>
+                        <div class="p-3 md:p-4">
+                            <h3 class="font-bold text-xs md:text-sm text-white">Graphic Tee</h3>
+                            <p class="text-neutral-600 text-[10px] mt-1">Yıkanmış Siyah</p>
+                            <p class="text-neutral-600 font-mono font-bold text-xs mt-2 line-through">₺890</p>
+                        </div>
+                    </div>
+                    <div class="reveal prod bg-neutral-950 border border-white/5">
+                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-d3/600/800.jpg" class="w-full h-full object-cover grs" alt="">
+                            <div class="prod-over">
+                                <button onclick="event.preventDefault(); addCart('Bomber Jacket',3490)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                            </div>
+                        </a>
+                        <div class="p-3 md:p-4">
+                            <h3 class="font-bold text-xs md:text-sm text-white">Bomber Jacket</h3>
+                            <p class="text-neutral-600 text-[10px] mt-1">Zeytin / Naylon</p>
+                            <p class="text-white font-mono font-bold text-xs mt-2">₺3.490</p>
+                        </div>
+                    </div>
+                    <div class="reveal prod bg-neutral-950 border border-white/5">
+                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-d4/600/800.jpg" class="w-full h-full object-cover grs" alt="">
+                            <div class="prod-over">
+                                <button onclick="event.preventDefault(); addCart('Snapback Cap',690)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                            </div>
+                            <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Limited</span>
+                        </a>
+                        <div class="p-3 md:p-4">
+                            <h3 class="font-bold text-xs md:text-sm text-white">Snapback Cap</h3>
+                            <p class="text-neutral-600 text-[10px] mt-1">Siyah / Nakış</p>
+                            <p class="text-white font-mono font-bold text-xs mt-2">₺690</p>
+                        </div>
+                    </div>
+                    <div class="reveal prod bg-neutral-950 border border-white/5">
+                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-d5/600/800.jpg" class="w-full h-full object-cover grs" alt="">
+                            <div class="prod-over">
+                                <button onclick="event.preventDefault(); addCart('Cargo Pants',2290)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                            </div>
+                        </a>
+                        <div class="p-3 md:p-4">
+                            <h3 class="font-bold text-xs md:text-sm text-white">Cargo Pants</h3>
+                            <p class="text-neutral-600 text-[10px] mt-1">Antrasit / 6 Cep</p>
+                            <p class="text-white font-mono font-bold text-xs mt-2">₺2.290</p>
+                        </div>
+                    </div>
+                    <div class="reveal prod bg-neutral-950 border border-white/5">
+                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-d6/600/800.jpg" class="w-full h-full object-cover grs" alt="">
+                            <div class="prod-over">
+                                <button onclick="event.preventDefault(); addCart('Shoulder Bag',1190)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                            </div>
+                            <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Yeni</span>
+                        </a>
+                        <div class="p-3 md:p-4">
+                            <h3 class="font-bold text-xs md:text-sm text-white">Shoulder Bag</h3>
+                            <p class="text-neutral-600 text-[10px] mt-1">Siyah / Su Geçirmez</p>
+                            <p class="text-white font-mono font-bold text-xs mt-2">₺1.190</p>
+                        </div>
+                    </div>
+                    <div class="reveal prod bg-neutral-950 border border-white/5">
+                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-d7/600/800.jpg" class="w-full h-full object-cover grs" alt="">
+                            <div class="prod-over">
+                                <button onclick="event.preventDefault(); addCart('Ring Set',1490)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                            </div>
+                            <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Limited</span>
+                        </a>
+                        <div class="p-3 md:p-4">
+                            <h3 class="font-bold text-xs md:text-sm text-white">Ring Set</h3>
+                            <p class="text-neutral-600 text-[10px] mt-1">Gümüş / 3 Parça</p>
+                            <p class="text-white font-mono font-bold text-xs mt-2">₺1.490</p>
+                        </div>
+                    </div>
+                    <div class="reveal prod bg-neutral-950 border border-white/5">
+                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
+                            <img src="https://picsum.photos/seed/gng-d8/600/800.jpg" class="w-full h-full object-cover grs" alt="">
+                            <div class="prod-over">
+                                <button onclick="event.preventDefault(); addCart('Çorap 3\'lü',390)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                            </div>
+                        </a>
+                        <div class="p-3 md:p-4">
+                            <h3 class="font-bold text-xs md:text-sm text-white">Çorap 3'lü</h3>
+                            <p class="text-neutral-600 text-[10px] mt-1">Karışık / Ribana</p>
+                            <p class="text-white font-mono font-bold text-xs mt-2">₺390</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ ABOUT ═══ -->
+        <section id="about" class="py-24 md:py-40 border-t border-white/5">
+            <div class="max-w-7xl mx-auto px-5 md:px-10">
+                <div class="reveal grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+                    <div>
+                        <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Köken</p>
+                        <h2 class="text-5xl md:text-8xl font-black tracking-tighter uppercase leading-[0.85]">
+                            BİZİM<br><span class="text-neutral-600">HİKAYE</span>
+                        </h2>
+                        <div class="line-reveal mt-8 mb-8"></div>
+                        <p class="text-neutral-400 text-sm leading-relaxed mb-6">
+                            GNG, sokakların sesini giysilere çeviren bir hareket. 2020'de İstanbul'un arka sokaklarında doğduk — büyük hayaller, kısıtlı imkanlar, sınırsız tutku.
+                        </p>
+                        <p class="text-neutral-500 text-sm leading-relaxed mb-6">
+                            Bizim için moda podyumlarda yürüyen modeller değil; gece yarısı grafiti yapan, yeraltında beat çalan, sokakta gerçek hikayesi olan insanlar. Her koleksiyon bir manifesto: kendi kurallarını koy, kendi tarzını yarat.
+                        </p>
+                        <p class="text-neutral-600 text-sm leading-relaxed">
+                            GNG giymek bir seçim değil, bir duruştur.
+                        </p>
+                        <!-- Timeline -->
+                        <div class="mt-10 space-y-3">
+                            <div class="flex gap-4 items-center">
+                                <span class="font-mono text-[10px] text-white font-bold w-12">2020</span>
+                                <div class="flex-1 h-px bg-white/10"></div>
+                                <span class="text-neutral-500 text-xs">İlk prototip</span>
+                            </div>
+                            <div class="flex gap-4 items-center">
+                                <span class="font-mono text-[10px] text-white font-bold w-12">2021</span>
+                                <div class="flex-1 h-px bg-white/10"></div>
+                                <span class="text-neutral-500 text-xs">İlk drop 8dk'da tükendi</span>
+                            </div>
+                            <div class="flex gap-4 items-center">
+                                <span class="font-mono text-[10px] text-white font-bold w-12">2023</span>
+                                <div class="flex-1 h-px bg-white/10"></div>
+                                <span class="text-neutral-500 text-xs">10K topluluk</span>
+                            </div>
+                            <div class="flex gap-4 items-center">
+                                <span class="font-mono text-[10px] text-white font-bold w-12">2025</span>
+                                <div class="flex-1 h-px bg-white/10"></div>
+                                <span class="text-neutral-500 text-xs">Uluslararası sevkiyat</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <img src="https://picsum.photos/seed/gng-about-dark/700/900.jpg" class="w-full aspect-[3/4] object-cover grs" alt="">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent h-1/3"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ CREW ═══ -->
+        <section id="crew" class="py-24 md:py-40 bg-black border-t border-white/5">
+            <div class="max-w-7xl mx-auto px-5 md:px-10">
+                <div class="reveal text-center mb-12 md:mb-16">
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Aile</p>
+                    <h2 class="text-5xl md:text-8xl font-black tracking-tighter uppercase">KADRO</h2>
+                </div>
+                <div class="line-reveal mb-12"></div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                    <div class="reveal prof">
+                        <div class="relative aspect-[3/4] overflow-hidden mb-4">
+                            <img src="https://picsum.photos/seed/gng-k1/500/700.jpg" class="w-full h-full object-cover prof-img" alt="">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
+                        <h3 class="font-black text-sm md:text-base text-white uppercase tracking-tight">KEMAL D.</h3>
+                        <p class="text-neutral-500 text-[9px] uppercase tracking-widest font-mono mt-1">Kurucu / Kreatif</p>
+                    </div>
+                    <div class="reveal prof">
+                        <div class="relative aspect-[3/4] overflow-hidden mb-4">
+                            <img src="https://picsum.photos/seed/gng-k2/500/700.jpg" class="w-full h-full object-cover prof-img" alt="">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
+                        <h3 class="font-black text-sm md:text-base text-white uppercase tracking-tight">DENİZ A.</h3>
+                        <p class="text-neutral-500 text-[9px] uppercase tracking-widest font-mono mt-1">Baş Tasarımcı</p>
+                    </div>
+                    <div class="reveal prof">
+                        <div class="relative aspect-[3/4] overflow-hidden mb-4">
+                            <img src="https://picsum.photos/seed/gng-k3/500/700.jpg" class="w-full h-full object-cover prof-img" alt="">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
+                        <h3 class="font-black text-sm md:text-base text-white uppercase tracking-tight">SELEN K.</h3>
+                        <p class="text-neutral-500 text-[9px] uppercase tracking-widest font-mono mt-1">Marka Müdürü</p>
+                    </div>
+                    <div class="reveal prof">
+                        <div class="relative aspect-[3/4] overflow-hidden mb-4">
+                            <img src="https://picsum.photos/seed/gng-k4/500/700.jpg" class="w-full h-full object-cover prof-img" alt="">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
+                        <h3 class="font-black text-sm md:text-base text-white uppercase tracking-tight">CANO M.</h3>
+                        <p class="text-neutral-500 text-[9px] uppercase tracking-widest font-mono mt-1">Fotoğraf / Görsel</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ LOOKBOOK ═══ -->
+        <section id="lookbook" class="py-24 md:py-40 border-t border-white/5">
+            <div class="max-w-7xl mx-auto px-5 md:px-10">
+                <div class="reveal text-center mb-12 md:mb-16">
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Görsel</p>
+                    <h2 class="text-5xl md:text-8xl font-black tracking-tighter uppercase">LOOKBOOK</h2>
+                </div>
+                <div class="line-reveal mb-12"></div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
+                    <div class="reveal row-span-2 relative group overflow-hidden">
+                        <img src="https://picsum.photos/seed/gng-lb1/600/1200.jpg" class="w-full h-full object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500"></div>
+                    </div>
+                    <div class="reveal relative group overflow-hidden">
+                        <img src="https://picsum.photos/seed/gng-lb2/600/600.jpg" class="w-full aspect-square object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500"></div>
+                    </div>
+                    <div class="reveal relative group overflow-hidden">
+                        <img src="https://picsum.photos/seed/gng-lb3/600/600.jpg" class="w-full aspect-square object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500"></div>
+                    </div>
+                    <div class="reveal relative group overflow-hidden">
+                        <img src="https://picsum.photos/seed/gng-lb4/600/600.jpg" class="w-full aspect-square object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500"></div>
+                    </div>
+                    <div class="reveal relative group overflow-hidden">
+                        <img src="https://picsum.photos/seed/gng-lb5/600/600.jpg" class="w-full aspect-square object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ EVENTS ═══ -->
+        <section id="events" class="py-24 md:py-40 bg-black border-t border-white/5">
+            <div class="max-w-5xl mx-auto px-5 md:px-10">
+                <div class="reveal text-center mb-12 md:mb-16">
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Yaklaşan</p>
+                    <h2 class="text-5xl md:text-8xl font-black tracking-tighter uppercase">ETKİNLİKLER</h2>
+                </div>
+                <div class="line-reveal mb-12"></div>
+                <div class="space-y-2">
+                    <div class="reveal border border-white/5 p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 hover:border-white/15 transition-colors">
+                        <div class="md:w-24 flex-shrink-0">
+                            <p class="font-mono font-bold text-xl text-white">15</p>
+                            <p class="text-[9px] uppercase tracking-widest text-neutral-600 font-mono">Mar 2025</p>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-white text-sm uppercase tracking-tight">SS25 Launch Party</h3>
+                            <p class="text-neutral-500 text-xs mt-1">GNG HQ, İstanbul — Live DJ, drinks, limited giveaways</p>
+                        </div>
+                        <button onclick="toast('RSVP gönderildi')" class="text-[9px] uppercase tracking-[0.2em] font-bold border border-white/10 text-white px-5 py-2.5 hover:bg-white hover:text-black transition-all">RSVP</button>
+                    </div>
+                    <div class="reveal border border-white/5 p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 hover:border-white/15 transition-colors">
+                        <div class="md:w-24 flex-shrink-0">
+                            <p class="font-mono font-bold text-xl text-white">22</p>
+                            <p class="text-[9px] uppercase tracking-widest text-neutral-600 font-mono">Mar 2025</p>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-white text-sm uppercase tracking-tight">Basement Sessions</h3>
+                            <p class="text-neutral-500 text-xs mt-1">Underground Venue, Ankara — Hip-hop & streetwear night</p>
+                        </div>
+                        <button onclick="toast('Bilet ayrıldı')" class="text-[9px] uppercase tracking-[0.2em] font-bold bg-white text-black px-5 py-2.5 hover:bg-neutral-200 transition-colors">Bilet</button>
+                    </div>
+                    <div class="reveal border border-white/5 p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 hover:border-white/15 transition-colors">
+                        <div class="md:w-24 flex-shrink-0">
+                            <p class="font-mono font-bold text-xl text-white">05</p>
+                            <p class="text-[9px] uppercase tracking-widest text-neutral-600 font-mono">Nis 2025</p>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-white text-sm uppercase tracking-tight">Pop-Up İzmir</h3>
+                            <p class="text-neutral-500 text-xs mt-1">Alsancak — 3 günlük pop-up, İzmir'e özel parçalar</p>
+                        </div>
+                        <button onclick="toast('Hatırlatıcı ayarlandı')" class="text-[9px] uppercase tracking-[0.2em] font-bold border border-white/10 text-white px-5 py-2.5 hover:border-white/30 transition-colors">Hatırlat</button>
+                    </div>
+                    <div class="reveal border border-white/5 p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 hover:border-white/15 transition-colors">
+                        <div class="md:w-24 flex-shrink-0">
+                            <p class="font-mono font-bold text-xl text-white">19</p>
+                            <p class="text-[9px] uppercase tracking-widest text-neutral-600 font-mono">Nis 2025</p>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-white text-sm uppercase tracking-tight">Graffiti Atölyesi</h3>
+                            <p class="text-neutral-500 text-xs mt-1">Kadıköy Hub — Cano M. ile workshop, tüm malzeme dahil</p>
+                        </div>
+                        <button onclick="toast('Kaydın alındı')" class="text-[9px] uppercase tracking-[0.2em] font-bold bg-white text-black px-5 py-2.5 hover:bg-neutral-200 transition-colors">Kayıt</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ SIZE GUIDE ═══ -->
+        <section class="py-24 md:py-40 border-t border-white/5">
+            <div class="max-w-4xl mx-auto px-5 md:px-10">
+                <div class="reveal text-center mb-12">
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Beden</p>
+                    <h2 class="text-4xl md:text-6xl font-black tracking-tighter uppercase">BEDEN TABLOSU</h2>
+                    <p class="text-neutral-500 text-xs mt-4">GNG oversized fit üretir. Normal bedeninin 1 numara küçüğünü al.</p>
+                </div>
+                <div class="reveal overflow-x-auto">
+                    <table class="w-full min-w-[480px] text-center">
+                        <thead>
+                            <tr class="border-b border-white/10">
+                                <th class="py-3 text-[9px] uppercase tracking-widest font-mono text-white font-bold">Beden</th>
+                                <th class="py-3 text-[9px] uppercase tracking-widest font-mono text-white font-bold">Göğüs</th>
+                                <th class="py-3 text-[9px] uppercase tracking-widest font-mono text-white font-bold">Uzunluk</th>
+                                <th class="py-3 text-[9px] uppercase tracking-widest font-mono text-white font-bold">Omuz</th>
+                                <th class="py-3 text-[9px] uppercase tracking-widest font-mono text-white font-bold">Kol</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-neutral-500 text-xs">
+                            <tr class="border-b border-white/5 hover:text-white hover:bg-white/5 transition-colors"><td class="py-3 font-bold text-white">S</td><td>104</td><td>72</td><td>50</td><td>62</td></tr>
+                            <tr class="border-b border-white/5 hover:text-white hover:bg-white/5 transition-colors"><td class="py-3 font-bold text-white">M</td><td>110</td><td>74</td><td>52</td><td>64</td></tr>
+                            <tr class="border-b border-white/5 hover:text-white hover:bg-white/5 transition-colors"><td class="py-3 font-bold text-white">L</td><td>116</td><td>76</td><td>54</td><td>66</td></tr>
+                            <tr class="border-b border-white/5 hover:text-white hover:bg-white/5 transition-colors"><td class="py-3 font-bold text-white">XL</td><td>122</td><td>78</td><td>56</td><td>68</td></tr>
+                            <tr class="hover:text-white hover:bg-white/5 transition-colors"><td class="py-3 font-bold text-white">XXL</td><td>128</td><td>80</td><td>58</td><td>70</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ FAQ ═══ -->
+        <section id="faq" class="py-24 md:py-40 bg-black border-t border-white/5">
+            <div class="max-w-3xl mx-auto px-5 md:px-10">
+                <div class="reveal text-center mb-12">
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Yardım</p>
+                    <h2 class="text-5xl md:text-7xl font-black tracking-tighter uppercase">SSS</h2>
+                </div>
+                <div class="line-reveal mb-10"></div>
+                <div class="reveal space-y-1">
+                    <div class="border-b border-white/5">
+                        <button onclick="togFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Kargo ne zaman gelir?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0"></i>
+                        </button>
+                        <div class="faq-a"><p class="pb-5 text-neutral-500 text-xs leading-relaxed">Türkiye içi 2-4 iş günü, uluslararası 7-14 iş günü. Kargo takip numaranız e-posta ile gönderilir.</p></div>
+                    </div>
+                    <div class="border-b border-white/5">
+                        <button onclick="togFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">İade yapabilir miyim?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0"></i>
+                        </button>
+                        <div class="faq-a"><p class="pb-5 text-neutral-500 text-xs leading-relaxed">14 gün içinde kullanılmamış, etiketi sökülmemiş ürünleri iade edebilirsiniz. Limited drop ürünleri iade kapsamında değildir.</p></div>
+                    </div>
+                    <div class="border-b border-white/5">
+                        <button onclick="togFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">GNG oversized mi?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0"></i>
+                        </button>
+                        <div class="faq-a"><p class="pb-5 text-neutral-500 text-xs leading-relaxed">Evet. Normal bedeninizin 1 numara küçüğünü almanızı tavsiye ederiz.</p></div>
+                    </div>
+                    <div class="border-b border-white/5">
+                        <button onclick="togFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Uluslararası sipariş verebilir miyim?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0"></i>
+                        </button>
+                        <div class="faq-a"><p class="pb-5 text-neutral-500 text-xs leading-relaxed">Avrupa ve ABD'ye sevkiyat başlamıştır. Diğer bölgeler için iletişime geçin.</p></div>
+                    </div>
+                    <div class="border-b border-white/5">
+                        <button onclick="togFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Limited drop'lar ne zaman açılıyor?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0"></i>
+                        </button>
+                        <div class="faq-a"><p class="pb-5 text-neutral-500 text-xs leading-relaxed">Tarihler Instagram ve newsletter üzerinden duyurulur. Erken erişim için GNG ailesine katılın.</p></div>
+                    </div>
+                    <div class="border-b border-white/5">
+                        <button onclick="togFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Collab yapmak istiyorum?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0"></i>
+                        </button>
+                        <div class="faq-a"><p class="pb-5 text-neutral-500 text-xs leading-relaxed">collab@gng.com adresine portfolio ve konsept önerinizle başvurun.</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ INSTAGRAM ═══ -->
+        <section class="py-24 md:py-40 border-t border-white/5">
+            <div class="max-w-7xl mx-auto px-5 md:px-10">
+                <div class="reveal text-center mb-10">
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Takip Et</p>
+                    <h2 class="text-3xl md:text-5xl font-black tracking-tighter uppercase">@GHETTONEEDGANGSTAZ</h2>
+                </div>
+                <div class="reveal grid grid-cols-3 md:grid-cols-5 gap-1">
+                    <a href="#" class="relative group aspect-square overflow-hidden"><img src="https://picsum.photos/seed/gng-ig-a/400/400.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
+                    <a href="#" class="relative group aspect-square overflow-hidden"><img src="https://picsum.photos/seed/gng-ig-b/400/400.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
+                    <a href="#" class="relative group aspect-square overflow-hidden"><img src="https://picsum.photos/seed/gng-ig-c/400/400.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
+                    <a href="#" class="relative group aspect-square overflow-hidden hidden md:block"><img src="https://picsum.photos/seed/gng-ig-d/400/400.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
+                    <a href="#" class="relative group aspect-square overflow-hidden hidden md:block"><img src="https://picsum.photos/seed/gng-ig-e/400/400.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ NEWSLETTER ═══ -->
+        <section id="contact" class="py-24 md:py-40 bg-black border-t border-white/5 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-[0.02]">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[25vw] font-black text-white whitespace-nowrap select-none uppercase tracking-tighter">GNG</div>
+            </div>
+            <div class="relative z-10 max-w-xl mx-auto px-5 md:px-10 text-center">
+                <div class="reveal">
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Bağlı Kal</p>
+                    <h2 class="text-4xl md:text-7xl font-black tracking-tighter uppercase mb-4">HABERDAR OL</h2>
+                    <p class="text-neutral-500 text-sm max-w-sm mx-auto mb-10">Özel drop'lar, limited parçalar, etkinlikler. İlk sen öğren.</p>
+                    <form onsubmit="handleNL(event)" class="flex flex-col sm:flex-row gap-2">
+                        <input type="email" placeholder="E-posta adresiniz" required class="flex-1 bg-transparent border border-white/10 px-5 py-4 text-white text-xs placeholder:text-neutral-600 focus:outline-none focus:border-white/30 transition-colors font-mono">
+                        <button type="submit" class="bg-white text-black px-8 py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors whitespace-nowrap">BİLDİR</button>
+                    </form>
+                    <div id="nlMsg" class="mt-4 text-xs font-mono text-white hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ FOOTER ═══ -->
+        <footer class="border-t border-white/5 pt-16 pb-8 bg-black">
+            <div class="max-w-7xl mx-auto px-5 md:px-10">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+                    <div class="col-span-2 md:col-span-1">
+                        <span class="font-mono font-bold text-2xl text-white">GNG</span>
+                        <p class="text-neutral-600 text-xs mt-4 leading-relaxed max-w-xs">Sokaktan doğan, şehrin nabzını taşıyan marka.</p>
+                        <div class="flex gap-3 mt-6">
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="instagram" class="w-3.5 h-3.5"></i></a>
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="twitter" class="w-3.5 h-3.5"></i></a>
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="youtube" class="w-3.5 h-3.5"></i></a>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Mağaza</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Yeni Gelenler</a></li>
+                            <li><a href="#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Hoodie</a></li>
+                            <li><a href="#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">T-Shirt</a></li>
+                            <li><a href="#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Pantolon</a></li>
+                            <li><a href="#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Aksesuar</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Bilgi</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#about" class="text-neutral-600 text-xs hover:text-white transition-colors">Hakkımızda</a></li>
+                            <li><a href="pages/shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Beden Rehberi</a></li>
+                            <li><a href="pages/shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Kargo</a></li>
+                            <li><a href="pages/shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">İade</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Yasal</h4>
+                        <ul class="space-y-2">
+                            <li><a href="pages/privacy.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Gizlilik</a></li>
+                            <li><a href="pages/terms.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Koşullar</a></li>
+                            <li><a href="pages/shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Çerez</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-neutral-700 text-[10px] font-mono">© 2025 GNG — GHETTO NEED GANGSTAZ</p>
+                    <div class="flex items-center gap-3 text-neutral-700">
+                        <span class="text-[10px] font-mono">VISA</span>
+                        <span class="text-[10px] font-mono">MC</span>
+                        <span class="text-[10px] font-mono">AMEX</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // ═══ SPLASH ═══
+        let pct = 0;
+        const sPct = document.getElementById('sPct');
+        const sEnter = document.getElementById('sEnter');
+        const enterBtn = document.getElementById('enterBtn');
+
+        const sInt = setInterval(() => {
+            pct += Math.floor(Math.random() * 12) + 3;
+            if (pct >= 100) { pct = 100; clearInterval(sInt); sPct.textContent = '100%'; sEnter.classList.add('show'); }
+            else { sPct.textContent = pct + '%'; }
+        }, 180);
+
+        function go() {
+            document.getElementById('splash').classList.add('done');
+            document.getElementById('site').style.opacity = '1';
+            document.body.style.overflow = 'auto';
+            lucide.createIcons();
+            initObs();
+        }
+
+        enterBtn.addEventListener('click', go);
+        document.addEventListener('keydown', e => { if (e.key === 'Enter' && !document.getElementById('splash').classList.contains('done')) go(); });
+        setTimeout(() => { if (!document.getElementById('splash').classList.contains('done')) go(); }, 7000);
+
+        // ═══ MOBILE ═══
+        let mOpen = false;
+        function toggleMob() { mOpen = !mOpen; document.getElementById('mobMenu').classList.toggle('open', mOpen); }
+
+        // ═══ SCROLL REVEAL ═══
+        function initObs() {
+            const obs = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal, .line-reveal').forEach(el => obs.observe(el));
+        }
+
+        // ═══ CART ═══
+        let cart = [];
+        function addCart(n, p) { const ex = cart.find(i => i.n === n); if (ex) ex.q++; else cart.push({ n, p, q: 1 }); updCart(); toast(n + ' eklendi'); }
+        function rmCart(i) { cart.splice(i, 1); updCart(); }
+        function updCart() {
+            const c = cart.reduce((s, i) => s + i.q, 0);
+            const t = cart.reduce((s, i) => s + i.p * i.q, 0);
+            document.getElementById('cartN').textContent = c;
+            document.getElementById('cartTot').textContent = '₺' + t.toLocaleString();
+            const list = document.getElementById('cartList');
+            const empty = document.getElementById('cartEmpty');
+            if (!cart.length) { empty.style.display = 'block'; list.innerHTML = ''; }
+            else { empty.style.display = 'none'; list.innerHTML = cart.map((i, x) => `<div class="flex items-center justify-between p-3 border border-white/5"><div><p class="text-white text-xs font-bold">${i.n}</p><p class="text-neutral-600 text-[10px]">x${i.q} — ₺${(i.p*i.q).toLocaleString()}</p></div><button onclick="rmCart(${x})" class="text-neutral-600 hover:text-white transition-colors"><i data-lucide="x" class="w-3 h-3"></i></button></div>`).join(''); lucide.createIcons(); }
+        }
+        function openCart() { document.getElementById('cartBox').classList.add('open'); document.getElementById('cartOv').classList.remove('hidden'); }
+        function closeCart() { document.getElementById('cartBox').classList.remove('open'); document.getElementById('cartOv').classList.add('hidden'); }
+
+        // ═══ TOAST ═══
+        function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('up'); setTimeout(() => t.classList.remove('up'), 2500); }
+
+        // ═══ FAQ ═══
+        function togFaq(btn) {
+            const a = btn.nextElementSibling, ic = btn.querySelector('.faq-i');
+            const open = a.classList.contains('open');
+            document.querySelectorAll('.faq-a').forEach(x => x.classList.remove('open'));
+            document.querySelectorAll('.faq-i').forEach(x => x.classList.remove('rot'));
+            if (!open) { a.classList.add('open'); ic.classList.add('rot'); }
+        }
+
+        // ═══ NEWSLETTER ═══
+        function handleNL(e) {
+            e.preventDefault();
+            const m = document.getElementById('nlMsg');
+            m.classList.remove('hidden'); m.textContent = 'GNG ailesine hoş geldin.';
+            e.target.reset(); setTimeout(() => m.classList.add('hidden'), 4000);
+        }
+
+        // ═══ SMOOTH SCROLL ═══
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const h = a.getAttribute('href'); if (h === '#') return;
+                e.preventDefault(); const t = document.querySelector(h);
+                if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>

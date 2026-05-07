@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İletişim — GNG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        main: ['Manrope', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body class="bg-black text-white font-main" data-page="contact">
+
+    <!-- TOAST -->
+    <div id="toast"></div>
+
+    <!-- ═══════════ SITE ═══════════ -->
+    <div id="site">
+
+        <!-- NAV -->
+        <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/5">
+            <div class="max-w-7xl mx-auto px-5 md:px-10 flex items-center justify-between h-16 md:h-20">
+                <a href="../index.html" class="font-mono font-bold text-lg md:text-xl text-white tracking-tight">GNG</a>
+                <div class="hidden lg:flex items-center gap-8">
+                    <a href="../index.html#drops" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Drops</a>
+                    <a href="../index.html#about" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Hakkında</a>
+                    <a href="../index.html#crew" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Kadro</a>
+                    <a href="../index.html#lookbook" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Lookbook</a>
+                    <a href="../index.html#events" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Etkinlikler</a>
+                    <a href="../index.html#faq" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">SSS</a>
+                    <a href="contact.html" class="text-[10px] uppercase tracking-[0.25em] text-white transition-colors duration-300">İletişim</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="openCart()" class="relative p-2 text-neutral-500 hover:text-white transition-colors">
+                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                        <span id="cartN" class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-white text-black text-[9px] font-bold rounded-full flex items-center justify-center">0</span>
+                    </button>
+                    <button class="lg:hidden p-2 text-white" onclick="toggleMob()">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MOBILE MENU -->
+        <div id="mobMenu" class="fixed inset-0 z-40 bg-black flex flex-col items-center justify-center gap-6 lg:hidden">
+            <a href="../index.html#drops" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">DROPS</a>
+            <a href="../index.html#about" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">HAKKINDA</a>
+            <a href="../index.html#crew" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">KADRO</a>
+            <a href="../index.html#lookbook" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">LOOKBOOK</a>
+            <a href="../index.html#events" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">ETKİNLİKLER</a>
+            <a href="../index.html#faq" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">SSS</a>
+            <a href="contact.html" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">İLETİŞİM</a>
+            <div class="mt-8"><a href="#" class="text-neutral-600 hover:text-white transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a></div>
+        </div>
+
+        <!-- CART -->
+        <div id="cartBox" class="fixed top-0 right-0 h-full w-full max-w-sm bg-black border-l border-white/5 z-50">
+            <div class="flex items-center justify-between p-6 border-b border-white/5">
+                <span class="text-[10px] uppercase tracking-[0.3em] font-bold">Sepet</span>
+                <button onclick="closeCart()" class="text-neutral-500 hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div id="cartItems" class="p-6" style="max-height:calc(100vh - 160px); overflow-y:auto;">
+                <div id="cartEmpty" class="text-center py-20">
+                    <p class="text-neutral-600 text-xs">Sepetiniz boş</p>
+                </div>
+                <div id="cartList" class="space-y-3"></div>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-white/5">
+                <div class="flex justify-between mb-4">
+                    <span class="text-neutral-500 text-xs">Toplam</span>
+                    <span id="cartTot" class="font-mono font-bold text-sm">₺0</span>
+                </div>
+                <a href="cart.html" class="w-full bg-white text-black py-3 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors inline-block text-center">Sepeti Görüntüle</a>
+            </div>
+        </div>
+        <div id="cartOv" class="fixed inset-0 bg-black/70 z-40 hidden" onclick="closeCart()"></div>
+
+        <!-- ═══ CONTACT PAGE ═══ -->
+        <section class="pt-32 pb-24 md:pt-40 md:pb-40">
+            <div class="max-w-7xl mx-auto px-5 md:px-10">
+                <div class="mb-12">
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// İletişim</p>
+                    <h1 class="text-4xl md:text-6xl font-black tracking-tighter uppercase">BİZE ULAŞIN</h1>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <!-- Contact Form -->
+                    <div class="border border-white/5 p-6">
+                        <h2 class="text-[10px] uppercase tracking-[0.3em] text-white font-bold mb-6">MESAJ GÖNDER</h2>
+                        
+                        <form id="contactForm" class="space-y-6">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-neutral-500 text-xs mb-2 block">Ad</label>
+                                    <input type="text" name="firstName" required placeholder="Adınız">
+                                </div>
+                                <div>
+                                    <label class="text-neutral-500 text-xs mb-2 block">Soyad</label>
+                                    <input type="text" name="lastName" required placeholder="Soyadınız">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-neutral-500 text-xs mb-2 block">E-posta</label>
+                                <input type="email" name="email" required placeholder="ornek@email.com">
+                            </div>
+                            <div>
+                                <label class="text-neutral-500 text-xs mb-2 block">Konu</label>
+                                <select name="subject" required>
+                                    <option value="">Seçiniz</option>
+                                    <option value="order">Sipariş Soruları</option>
+                                    <option value="product">Ürün Bilgileri</option>
+                                    <option value="shipping">Kargo ve Teslimat</option>
+                                    <option value="return">İade ve Değişim</option>
+                                    <option value="collab">İş Birliği</option>
+                                    <option value="other">Diğer</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-neutral-500 text-xs mb-2 block">Mesaj</label>
+                                <textarea name="message" required rows="5" placeholder="Mesajınız"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-white text-black py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors">
+                                Gönder
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="space-y-6">
+                        <div class="border border-white/5 p-6">
+                            <h2 class="text-[10px] uppercase tracking-[0.3em] text-white font-bold mb-6">İLETİŞİM BİLGİLERİ</h2>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-start gap-4">
+                                    <div class="w-10 h-10 border border-white/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="mail" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-white text-sm font-bold">E-posta</p>
+                                        <a href="mailto:info@gng.com" class="text-neutral-500 text-xs hover:text-white transition-colors">info@gng.com</a>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-4">
+                                    <div class="w-10 h-10 border border-white/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="phone" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-white text-sm font-bold">Telefon</p>
+                                        <a href="tel:+902123456789" class="text-neutral-500 text-xs hover:text-white transition-colors">+90 212 345 67 89</a>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-4">
+                                    <div class="w-10 h-10 border border-white/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="map-pin" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-white text-sm font-bold">Adres</p>
+                                        <p class="text-neutral-500 text-xs leading-relaxed">
+                                            GNG HQ<br>
+                                            Moda Cad. No: 123<br>
+                                            Kadıköy, İstanbul<br>
+                                            Türkiye
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-white/5 p-6">
+                            <h2 class="text-[10px] uppercase tracking-[0.3em] text-white font-bold mb-6">ÇALIŞMA SAATLERİ</h2>
+                            
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-neutral-500 text-xs">Pazartesi - Cuma</span>
+                                    <span class="text-white text-xs font-mono">09:00 - 18:00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-neutral-500 text-xs">Cumartesi</span>
+                                    <span class="text-white text-xs font-mono">10:00 - 16:00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-neutral-500 text-xs">Pazar</span>
+                                    <span class="text-white text-xs font-mono">Kapalı</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-white/5 p-6">
+                            <h2 class="text-[10px] uppercase tracking-[0.3em] text-white font-bold mb-6">SOSYAL MEDYA</h2>
+                            
+                            <div class="flex gap-3">
+                                <a href="#" class="w-10 h-10 border border-white/10 flex items-center justify-center text-neutral-500 hover:text-white hover:border-white/30 transition-all">
+                                    <i data-lucide="instagram" class="w-4 h-4"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 border border-white/10 flex items-center justify-center text-neutral-500 hover:text-white hover:border-white/30 transition-all">
+                                    <i data-lucide="twitter" class="w-4 h-4"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 border border-white/10 flex items-center justify-center text-neutral-500 hover:text-white hover:border-white/30 transition-all">
+                                    <i data-lucide="youtube" class="w-4 h-4"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 border border-white/10 flex items-center justify-center text-neutral-500 hover:text-white hover:border-white/30 transition-all">
+                                    <i data-lucide="facebook" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ FOOTER ═══ -->
+        <footer class="border-t border-white/5 pt-16 pb-8 bg-black">
+            <div class="max-w-7xl mx-auto px-5 md:px-10">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+                    <div class="col-span-2 md:col-span-1">
+                        <span class="font-mono font-bold text-2xl text-white">GNG</span>
+                        <p class="text-neutral-600 text-xs mt-4 leading-relaxed max-w-xs">Sokaktan doğan, şehrin nabzını taşıyan marka.</p>
+                        <div class="flex gap-3 mt-6">
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="instagram" class="w-3.5 h-3.5"></i></a>
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="twitter" class="w-3.5 h-3.5"></i></a>
+                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="youtube" class="w-3.5 h-3.5"></i></a>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Mağaza</h4>
+                        <ul class="space-y-2">
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Yeni Gelenler</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Hoodie</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">T-Shirt</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Pantolon</a></li>
+                            <li><a href="../index.html#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Aksesuar</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Bilgi</h4>
+                        <ul class="space-y-2">
+                            <li><a href="../index.html#about" class="text-neutral-600 text-xs hover:text-white transition-colors">Hakkımızda</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Beden Rehberi</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Kargo</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">İade</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Yasal</h4>
+                        <ul class="space-y-2">
+                            <li><a href="privacy.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Gizlilik</a></li>
+                            <li><a href="terms.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Koşullar</a></li>
+                            <li><a href="shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Çerez</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-neutral-700 text-[10px] font-mono">© 2025 GNG — GHETTO NEED GANGSTAZ</p>
+                    <div class="flex items-center gap-3 text-neutral-700">
+                        <span class="text-[10px] font-mono">VISA</span>
+                        <span class="text-[10px] font-mono">MC</span>
+                        <span class="text-[10px] font-mono">AMEX</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/components.js"></script>
+    <script src="../js/pages.js"></script>
+</body>
+</html>
