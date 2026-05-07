@@ -41,6 +41,10 @@ const addCart = addToCart;
 function removeFromCart(index) {
     cart.splice(index, 1);
     updateCart();
+    // Eğer sepet sayfasındaysak, sepeti yeniden render et
+    if (document.getElementById('cartPageItems')) {
+        renderCartItems();
+    }
 }
 
 function updateCart() {
