@@ -96,6 +96,24 @@
         }
         .prod:hover .prod-over { opacity: 1; }
 
+        /* ═══ PRODUCT SLIDER ═══ */
+        .product-slider { position: relative; }
+        .slider-container { position: relative; width: 100%; height: 100%; }
+        .slider-container img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 0; transition: opacity 0.5s ease;
+        }
+        .slider-container img.active { opacity: 1; }
+        .slider-dots {
+            position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 6px; z-index: 5;
+        }
+        .slider-dots .dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: rgba(255,255,255,0.3); transition: all 0.3s ease;
+        }
+        .slider-dots .dot.active { background: white; width: 18px; border-radius: 3px; }
+
         /* ═══ MOBILE MENU ═══ */
         #mobMenu {
             transform: translateX(100%);
@@ -273,13 +291,24 @@
                 <div class="line-reveal mb-12"></div>
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
                     <div class="reveal prod bg-neutral-950 border border-white/5">
-                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                            <div class="prod-over">
-                                <button onclick="event.preventDefault(); addCart('Oversized Hoodie',1890)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                        <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=800&fit=crop"]'>
+                            <div class="slider-container">
+                                <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
-                            <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Yeni</span>
-                        </a>
+                            <div class="slider-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <a href="pages/product.html" class="absolute inset-0 z-10">
+                                <div class="prod-over">
+                                    <button onclick="event.preventDefault(); addCart('Oversized Hoodie',1890)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                </div>
+                                <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Yeni</span>
+                            </a>
+                        </div>
                         <div class="p-3 md:p-4">
                             <h3 class="font-bold text-xs md:text-sm text-white">Oversized Hoodie</h3>
                             <p class="text-neutral-600 text-[10px] mt-1">Siyah / Ağır Pamuk</p>
@@ -287,13 +316,24 @@
                         </div>
                     </div>
                     <div class="reveal prod bg-neutral-950 border border-white/5">
-                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
-                            <img src="https://picsum.photos/seed/gng-d2/600/800.jpg" class="w-full h-full object-cover grs" alt="">
-                            <div class="prod-over">
-                                <button onclick="event.preventDefault(); addCart('Graphic Tee',890)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                        <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=600&h=800&fit=crop"]'>
+                            <div class="slider-container">
+                                <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
-                            <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-neutral-800 text-neutral-400 px-2 py-1">Tükendi</span>
-                        </a>
+                            <div class="slider-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <a href="pages/product.html" class="absolute inset-0 z-10">
+                                <div class="prod-over">
+                                    <button onclick="event.preventDefault(); addCart('Graphic Tee',890)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                </div>
+                                <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-neutral-800 text-neutral-400 px-2 py-1">Tükendi</span>
+                            </a>
+                        </div>
                         <div class="p-3 md:p-4">
                             <h3 class="font-bold text-xs md:text-sm text-white">Graphic Tee</h3>
                             <p class="text-neutral-600 text-[10px] mt-1">Yıkanmış Siyah</p>
@@ -301,12 +341,23 @@
                         </div>
                     </div>
                     <div class="reveal prod bg-neutral-950 border border-white/5">
-                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                            <div class="prod-over">
-                                <button onclick="event.preventDefault(); addCart('Bomber Jacket',3490)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                        <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop&auto=format&h=800"]'>
+                            <div class="slider-container">
+                                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop&auto=format&h=800" class="w-full h-full object-cover grs" alt="">
                             </div>
-                        </a>
+                            <div class="slider-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <a href="pages/product.html" class="absolute inset-0 z-10">
+                                <div class="prod-over">
+                                    <button onclick="event.preventDefault(); addCart('Bomber Jacket',3490)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                </div>
+                            </a>
+                        </div>
                         <div class="p-3 md:p-4">
                             <h3 class="font-bold text-xs md:text-sm text-white">Bomber Jacket</h3>
                             <p class="text-neutral-600 text-[10px] mt-1">Zeytin / Naylon</p>
@@ -314,13 +365,24 @@
                         </div>
                     </div>
                     <div class="reveal prod bg-neutral-950 border border-white/5">
-                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
-                            <img src="https://picsum.photos/seed/gng-d4/600/800.jpg" class="w-full h-full object-cover grs" alt="">
-                            <div class="prod-over">
-                                <button onclick="event.preventDefault(); addCart('Snapback Cap',690)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                        <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1521369909029-2afed882baee?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?w=600&h=800&fit=crop"]'>
+                            <div class="slider-container">
+                                <img src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img src="https://images.unsplash.com/photo-1521369909029-2afed882baee?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img src="https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
-                            <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Limited</span>
-                        </a>
+                            <div class="slider-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <a href="pages/product.html" class="absolute inset-0 z-10">
+                                <div class="prod-over">
+                                    <button onclick="event.preventDefault(); addCart('Snapback Cap',690)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                </div>
+                                <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Limited</span>
+                            </a>
+                        </div>
                         <div class="p-3 md:p-4">
                             <h3 class="font-bold text-xs md:text-sm text-white">Snapback Cap</h3>
                             <p class="text-neutral-600 text-[10px] mt-1">Siyah / Nakış</p>
@@ -328,12 +390,23 @@
                         </div>
                     </div>
                     <div class="reveal prod bg-neutral-950 border border-white/5">
-                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                            <div class="prod-over">
-                                <button onclick="event.preventDefault(); addCart('Cargo Pants',2290)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                        <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=800&fit=crop"]'>
+                            <div class="slider-container">
+                                <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img src="https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
-                        </a>
+                            <div class="slider-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <a href="pages/product.html" class="absolute inset-0 z-10">
+                                <div class="prod-over">
+                                    <button onclick="event.preventDefault(); addCart('Cargo Pants',2290)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                </div>
+                            </a>
+                        </div>
                         <div class="p-3 md:p-4">
                             <h3 class="font-bold text-xs md:text-sm text-white">Cargo Pants</h3>
                             <p class="text-neutral-600 text-[10px] mt-1">Antrasit / 6 Cep</p>
@@ -341,13 +414,24 @@
                         </div>
                     </div>
                     <div class="reveal prod bg-neutral-950 border border-white/5">
-                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                            <div class="prod-over">
-                                <button onclick="event.preventDefault(); addCart('Shoulder Bag',1190)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                        <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1591561954557-26941169b49e?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&h=800&fit=crop"]'>
+                            <div class="slider-container">
+                                <img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img src="https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
-                            <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Yeni</span>
-                        </a>
+                            <div class="slider-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <a href="pages/product.html" class="absolute inset-0 z-10">
+                                <div class="prod-over">
+                                    <button onclick="event.preventDefault(); addCart('Shoulder Bag',1190)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                </div>
+                                <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Yeni</span>
+                            </a>
+                        </div>
                         <div class="p-3 md:p-4">
                             <h3 class="font-bold text-xs md:text-sm text-white">Shoulder Bag</h3>
                             <p class="text-neutral-600 text-[10px] mt-1">Siyah / Su Geçirmez</p>
@@ -355,13 +439,24 @@
                         </div>
                     </div>
                     <div class="reveal prod bg-neutral-950 border border-white/5">
-                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
-                            <img src="https://picsum.photos/seed/gng-d7/600/800.jpg" class="w-full h-full object-cover grs" alt="">
-                            <div class="prod-over">
-                                <button onclick="event.preventDefault(); addCart('Ring Set',1490)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                        <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=600&h=800&fit=crop"]'>
+                            <div class="slider-container">
+                                <img src="https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img src="https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
-                            <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Limited</span>
-                        </a>
+                            <div class="slider-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <a href="pages/product.html" class="absolute inset-0 z-10">
+                                <div class="prod-over">
+                                    <button onclick="event.preventDefault(); addCart('Ring Set',1490)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                </div>
+                                <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Limited</span>
+                            </a>
+                        </div>
                         <div class="p-3 md:p-4">
                             <h3 class="font-bold text-xs md:text-sm text-white">Ring Set</h3>
                             <p class="text-neutral-600 text-[10px] mt-1">Gümüş / 3 Parça</p>
@@ -369,12 +464,23 @@
                         </div>
                     </div>
                     <div class="reveal prod bg-neutral-950 border border-white/5">
-                        <a href="pages/product.html" class="block relative aspect-[3/4] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                            <div class="prod-over">
-                                <button onclick="event.preventDefault(); addCart('Çorap 3\'lü',390)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                        <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=600&h=800&fit=crop"]'>
+                            <div class="slider-container">
+                                <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img src="https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
-                        </a>
+                            <div class="slider-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <a href="pages/product.html" class="absolute inset-0 z-10">
+                                <div class="prod-over">
+                                    <button onclick="event.preventDefault(); addCart('Çorap 3\'lü',390)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                </div>
+                            </a>
+                        </div>
                         <div class="p-3 md:p-4">
                             <h3 class="font-bold text-xs md:text-sm text-white">Çorap 3'lü</h3>
                             <p class="text-neutral-600 text-[10px] mt-1">Karışık / Ribana</p>

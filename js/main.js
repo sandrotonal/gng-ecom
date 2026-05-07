@@ -110,6 +110,130 @@ function handleNewsletter(e) {
     }
 }
 
+// ═══ PRODUCT SLIDER ═══
+function initProductSliders() {
+    const sliders = document.querySelectorAll('.product-slider');
+    
+    sliders.forEach(slider => {
+        const container = slider.querySelector('.slider-container');
+        const images = container.querySelectorAll('img');
+        const dots = slider.querySelectorAll('.slider-dots .dot');
+        let currentIndex = 0;
+        let autoSlideInterval;
+        
+        function showSlide(index) {
+            images.forEach((img, i) => {
+                img.classList.toggle('active', i === index);
+            });
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            currentIndex = index;
+        }
+        
+        function nextSlide() {
+            const nextIndex = (currentIndex + 1) % images.length;
+            showSlide(nextIndex);
+        }
+        
+        function prevSlide() {
+            const prevIndex = (currentIndex - 1 + images.length) % images.length;
+            showSlide(prevIndex);
+        }
+        
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(nextSlide, 3000);
+        }
+        
+        function stopAutoSlide() {
+            clearInterval(autoSlideInterval);
+        }
+        
+        // Dot click
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                stopAutoSlide();
+                showSlide(index);
+                startAutoSlide();
+            });
+        });
+        
+        // Touch/Swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        slider.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            stopAutoSlide();
+        }, { passive: true });
+        
+        slider.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+            startAutoSlide();
+        }, { passive: true });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+        }
+        
+        // Mouse drag support
+        let isDragging = false;
+        let startX = 0;
+        
+        slider.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            stopAutoSlide();
+        });
+        
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+        });
+        
+        slider.addEventListener('mouseup', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const diff = startX - e.clientX;
+            const dragThreshold = 50;
+            
+            if (Math.abs(diff) > dragThreshold) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+            startAutoSlide();
+        });
+        
+        slider.addEventListener('mouseleave', () => {
+            if (isDragging) {
+                isDragging = false;
+                startAutoSlide();
+            }
+        });
+        
+        // Start auto slide
+        startAutoSlide();
+        
+        // Pause on hover
+        slider.addEventListener('mouseenter', stopAutoSlide);
+        slider.addEventListener('mouseleave', startAutoSlide);
+    });
+}
+
 // ═══ SAYFA YÜKLENDİĞİNDE ═══
 document.addEventListener('DOMContentLoaded', () => {
     // Lucide ikonlarını oluştur
@@ -131,4 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!splash || splash.classList.contains('done')) {
         initScrollReveal();
     }
+    
+    // Product slider'ları başlat
+    initProductSliders();
 });

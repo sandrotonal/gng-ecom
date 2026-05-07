@@ -63,6 +63,25 @@ nav {
 }
 .prod:hover .prod-over { opacity: 1; }
 
+/* ═══ PRODUCT SLIDER ═══ */
+.product-slider { position: relative; }
+.slider-container { position: relative; width: 100%; height: 100%; }
+.slider-container img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; opacity: 0; transition: opacity 0.5s ease;
+}
+.slider-container img.active { opacity: 1; }
+.slider-dots {
+    position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px; z-index: 5;
+}
+.slider-dots .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.3); transition: all 0.3s ease;
+    cursor: pointer;
+}
+.slider-dots .dot.active { background: white; width: 18px; border-radius: 3px; }
+
 /* ═══ PROFİL KARTI ═══ */
 .prof:hover .prof-img { filter: grayscale(0%) brightness(1); }
 .prof-img {
