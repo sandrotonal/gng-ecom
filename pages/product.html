@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oversized Hoodie — GNG</title>
+    <title>Ürün Detay — GNG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -98,13 +98,9 @@
                     <!-- Product Gallery -->
                     <div class="product-gallery">
                         <div class="relative aspect-[3/4] overflow-hidden mb-4">
-                            <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1067&fit=crop" class="w-full h-full object-cover grs active" alt="Oversized Hoodie">
+                            <img id="mainImage" src="" class="w-full h-full object-cover grs active" alt="">
                         </div>
-                        <div class="product-thumbnails grid grid-cols-4 gap-2">
-                            <img src="https://picsum.photos/seed/gng-d1/200/267.jpg" class="w-full aspect-[3/4] object-cover grs cursor-pointer active" alt="Thumbnail 1">
-                            <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=200&h=267&fit=crop" class="w-full aspect-[3/4] object-cover grs cursor-pointer" alt="Thumbnail 2">
-                            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=200&h=267&fit=crop" class="w-full aspect-[3/4] object-cover grs cursor-pointer" alt="Thumbnail 3">
-                            <img src="https://picsum.photos/seed/gng-d1-model/200/267.jpg" class="w-full aspect-[3/4] object-cover grs cursor-pointer" alt="Thumbnail 4">
+                        <div class="product-thumbnails grid grid-cols-4 gap-2" id="thumbnails">
                         </div>
                     </div>
 
@@ -112,24 +108,24 @@
                     <div class="product-info">
                         <div class="mb-6">
                             <span class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-2 block">// Yeni Sezon</span>
-                            <h1 class="text-3xl md:text-5xl font-black tracking-tighter uppercase mb-4">OVERSIZED HOODIE</h1>
-                            <p class="text-neutral-500 text-sm">Siyah / Ağır Pamuk</p>
+                            <h1 id="productName" class="text-3xl md:text-5xl font-black tracking-tighter uppercase mb-4"></h1>
+                            <p id="productColor" class="text-neutral-500 text-sm"></p>
                         </div>
 
                         <div class="mb-8">
-                            <p class="font-mono font-bold text-2xl text-white mb-2">₺1.890</p>
+                            <p id="productPrice" class="font-mono font-bold text-2xl text-white mb-2"></p>
                             <p class="text-neutral-600 text-xs">Kargo dahil</p>
                         </div>
 
                         <!-- Size Selection -->
                         <div class="mb-8">
                             <p class="text-[10px] uppercase tracking-[0.3em] text-white font-bold mb-4">Beden</p>
-                            <div class="flex gap-2">
-                                <button class="size-option w-12 h-12 border border-white/10 text-white text-xs font-bold hover:border-white/30 transition-colors">S</button>
-                                <button class="size-option w-12 h-12 border border-white/10 text-white text-xs font-bold hover:border-white/30 transition-colors selected">M</button>
-                                <button class="size-option w-12 h-12 border border-white/10 text-white text-xs font-bold hover:border-white/30 transition-colors">L</button>
-                                <button class="size-option w-12 h-12 border border-white/10 text-white text-xs font-bold hover:border-white/30 transition-colors">XL</button>
-                                <button class="size-option w-12 h-12 border border-white/10 text-white text-xs font-bold hover:border-white/30 transition-colors">XXL</button>
+                            <div class="flex gap-2" id="sizeOptions">
+                                <button class="size-option w-12 h-12 border border-white/10 text-white text-xs font-bold hover:border-white/30 transition-colors" data-size="S">S</button>
+                                <button class="size-option w-12 h-12 border border-white/10 text-white text-xs font-bold hover:border-white/30 transition-colors" data-size="M">M</button>
+                                <button class="size-option w-12 h-12 border border-white/10 text-white text-xs font-bold hover:border-white/30 transition-colors" data-size="L">L</button>
+                                <button class="size-option w-12 h-12 border border-white/10 text-white text-xs font-bold hover:border-white/30 transition-colors" data-size="XL">XL</button>
+                                <button class="size-option w-12 h-12 border border-white/10 text-white text-xs font-bold hover:border-white/30 transition-colors" data-size="XXL">XXL</button>
                             </div>
                             <a href="../index.html" class="text-neutral-600 text-[10px] underline mt-2 inline-block hover:text-white transition-colors">Beden rehberi</a>
                         </div>
@@ -150,7 +146,7 @@
 
                         <!-- Actions -->
                         <div class="flex flex-col gap-3 mb-8">
-                            <button onclick="addCart('Oversized Hoodie', 1890)" class="w-full bg-white text-black py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors">
+                            <button id="addToCartBtn" class="w-full bg-white text-black py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors">
                                 Sepete Ekle
                             </button>
                             <button class="w-full border border-white/10 text-white py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:border-white/30 transition-colors">
@@ -162,12 +158,7 @@
                         <div class="border-t border-white/5 pt-8">
                             <div class="mb-6">
                                 <p class="text-[10px] uppercase tracking-[0.3em] text-white font-bold mb-3">Ürün Detayları</p>
-                                <ul class="text-neutral-500 text-xs space-y-2">
-                                    <li>• %100 Pamuk</li>
-                                    <li>• Oversized fit</li>
-                                    <li>• Ağır gramaj (400gsm)</li>
-                                    <li>• Yıkanmış görünüm</li>
-                                    <li>• GNG logosu</li>
+                                <ul class="text-neutral-500 text-xs space-y-2" id="productDetails">
                                 </ul>
                             </div>
                             <div>
@@ -194,103 +185,7 @@
                         <h2 class="text-4xl md:text-6xl font-black tracking-tighter uppercase">İLGİLİ ÜRÜNLER</h2>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
-                    <div class="prod bg-neutral-950 border border-white/5">
-                        <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=600&h=800&fit=crop"]'>
-                            <div class="slider-container">
-                                <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
-                                <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                                <img src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                            </div>
-                            <div class="slider-dots">
-                                <span class="dot active"></span>
-                                <span class="dot"></span>
-                                <span class="dot"></span>
-                            </div>
-                            <a href="../index.html#drops" class="absolute inset-0 z-10">
-                                <div class="prod-over">
-                                    <button onclick="event.preventDefault(); addCart('Graphic Tee',890)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="p-3 md:p-4">
-                            <h3 class="font-bold text-xs md:text-sm text-white">Graphic Tee</h3>
-                            <p class="text-neutral-600 text-[10px] mt-1">Yıkanmış Siyah</p>
-                            <p class="text-white font-mono font-bold text-xs mt-2">₺890</p>
-                        </div>
-                    </div>
-                    <div class="prod bg-neutral-950 border border-white/5">
-                        <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop&auto=format&h=800"]'>
-                            <div class="slider-container">
-                                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
-                                <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop&auto=format&h=800" class="w-full h-full object-cover grs" alt="">
-                            </div>
-                            <div class="slider-dots">
-                                <span class="dot active"></span>
-                                <span class="dot"></span>
-                                <span class="dot"></span>
-                            </div>
-                            <a href="../index.html#drops" class="absolute inset-0 z-10">
-                                <div class="prod-over">
-                                    <button onclick="event.preventDefault(); addCart('Bomber Jacket',3490)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="p-3 md:p-4">
-                            <h3 class="font-bold text-xs md:text-sm text-white">Bomber Jacket</h3>
-                            <p class="text-neutral-600 text-[10px] mt-1">Zeytin / Naylon</p>
-                            <p class="text-white font-mono font-bold text-xs mt-2">₺3.490</p>
-                        </div>
-                    </div>
-                    <div class="prod bg-neutral-950 border border-white/5">
-                        <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=800&fit=crop"]'>
-                            <div class="slider-container">
-                                <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
-                                <img src="https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                                <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                            </div>
-                            <div class="slider-dots">
-                                <span class="dot active"></span>
-                                <span class="dot"></span>
-                                <span class="dot"></span>
-                            </div>
-                            <a href="../index.html#drops" class="absolute inset-0 z-10">
-                                <div class="prod-over">
-                                    <button onclick="event.preventDefault(); addCart('Cargo Pants',2290)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="p-3 md:p-4">
-                            <h3 class="font-bold text-xs md:text-sm text-white">Cargo Pants</h3>
-                            <p class="text-neutral-600 text-[10px] mt-1">Antrasit / 6 Cep</p>
-                            <p class="text-white font-mono font-bold text-xs mt-2">₺2.290</p>
-                        </div>
-                    </div>
-                    <div class="prod bg-neutral-950 border border-white/5">
-                        <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1591561954557-26941169b49e?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&h=800&fit=crop"]'>
-                            <div class="slider-container">
-                                <img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
-                                <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                                <img src="https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                            </div>
-                            <div class="slider-dots">
-                                <span class="dot active"></span>
-                                <span class="dot"></span>
-                                <span class="dot"></span>
-                            </div>
-                            <a href="../index.html#drops" class="absolute inset-0 z-10">
-                                <div class="prod-over">
-                                    <button onclick="event.preventDefault(); addCart('Shoulder Bag',1190)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="p-3 md:p-4">
-                            <h3 class="font-bold text-xs md:text-sm text-white">Shoulder Bag</h3>
-                            <p class="text-neutral-600 text-[10px] mt-1">Siyah / Su Geçirmez</p>
-                            <p class="text-white font-mono font-bold text-xs mt-2">₺1.190</p>
-                        </div>
-                    </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5" id="relatedProducts">
                 </div>
             </div>
         </section>
@@ -352,5 +247,180 @@
     <script src="../js/main.js"></script>
     <script src="../js/components.js"></script>
     <script src="../js/pages.js"></script>
+    <script>
+        // Ürün verileri
+        const products = {
+            1: {
+                name: 'Oversized Hoodie',
+                color: 'Siyah / Ağır Pamuk',
+                price: 1890,
+                images: [
+                    'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1067&fit=crop'
+                ],
+                details: ['%100 Pamuk', 'Oversized fit', 'Ağır gramaj (400gsm)', 'Yıkanmış görünüm', 'GNG logosu']
+            },
+            2: {
+                name: 'Graphic Tee',
+                color: 'Yıkanmış Siyah',
+                price: 890,
+                images: [
+                    'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=800&h=1067&fit=crop'
+                ],
+                details: ['%100 Pamuk', 'Regular fit', 'Yıkanmış görünüm', 'GNG grafik baskı', 'Yaka ribana']
+            },
+            3: {
+                name: 'Bomber Jacket',
+                color: 'Zeytin / Naylon',
+                price: 3490,
+                images: [
+                    'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&h=1067&fit=crop&auto=format&h=1067'
+                ],
+                details: ['%100 Naylon', 'Regular fit', 'Su geçirmez', 'Cep detayları', 'GNG logosu']
+            },
+            4: {
+                name: 'Snapback Cap',
+                color: 'Siyah / Nakış',
+                price: 690,
+                images: [
+                    'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1521369909029-2afed882baee?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?w=800&h=1067&fit=crop'
+                ],
+                details: ['%100 Pamuk', 'Ayarlabilir', 'Nakış detay', 'GNG logosu', 'Sırt bandı']
+            },
+            5: {
+                name: 'Cargo Pants',
+                color: 'Antrasit / 6 Cep',
+                price: 2290,
+                images: [
+                    'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&h=1067&fit=crop'
+                ],
+                details: ['%100 Pamuk', 'Regular fit', '6 cep', 'Elastik bel', 'GNG logosu']
+            },
+            6: {
+                name: 'Shoulder Bag',
+                color: 'Siyah / Su Geçirmez',
+                price: 1190,
+                images: [
+                    'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=800&h=1067&fit=crop'
+                ],
+                details: ['%100 Naylon', 'Su geçirmez', 'Ayarlabilir kayış', 'Cep detayları', 'GNG logosu']
+            },
+            7: {
+                name: 'Ring Set',
+                color: 'Gümüş / 3 Parça',
+                price: 1490,
+                images: [
+                    'https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=800&h=1067&fit=crop'
+                ],
+                details: ['%925 Gümüş', '3 parça', 'Minimal tasarım', 'GNG gravürü', 'Kutu dahil']
+            },
+            8: {
+                name: 'Çorap 3\'lü',
+                color: 'Karışık / Ribana',
+                price: 390,
+                images: [
+                    'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=800&h=1067&fit=crop',
+                    'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=800&h=1067&fit=crop'
+                ],
+                details: ['%100 Pamuk', '3 parça', 'Ribana', 'GNG logosu', 'Dayanıklı']
+            }
+        };
+
+        // URL'den ürün ID'sini al
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id') || '1';
+        const product = products[productId];
+
+        if (product) {
+            // Ürün bilgilerini yükle
+            document.getElementById('productName').textContent = product.name;
+            document.getElementById('productColor').textContent = product.color;
+            document.getElementById('productPrice').textContent = '₺' + product.price.toLocaleString();
+            document.getElementById('mainImage').src = product.images[0];
+
+            // Thumbnail'ları yükle
+            const thumbnailsContainer = document.getElementById('thumbnails');
+            product.images.forEach((img, index) => {
+                const thumb = document.createElement('img');
+                thumb.src = img;
+                thumb.className = 'w-full aspect-[3/4] object-cover grs cursor-pointer' + (index === 0 ? ' active' : '');
+                thumb.alt = 'Thumbnail ' + (index + 1);
+                thumb.onclick = () => {
+                    document.getElementById('mainImage').src = img;
+                    document.querySelectorAll('#thumbnails img').forEach(t => t.classList.remove('active'));
+                    thumb.classList.add('active');
+                };
+                thumbnailsContainer.appendChild(thumb);
+            });
+
+            // Ürün detaylarını yükle
+            const detailsContainer = document.getElementById('productDetails');
+            product.details.forEach(detail => {
+                const li = document.createElement('li');
+                li.textContent = '• ' + detail;
+                detailsContainer.appendChild(li);
+            });
+
+            // Sepete ekle butonu
+            document.getElementById('addToCartBtn').onclick = () => {
+                const selectedSize = document.querySelector('.size-option.selected')?.dataset.size || 'M';
+                const quantity = parseInt(document.getElementById('qty').value) || 1;
+                addCart(product.name, product.price, selectedSize, quantity);
+            };
+
+            // İlgili ürünleri yükle
+            const relatedContainer = document.getElementById('relatedProducts');
+            Object.keys(products).forEach(id => {
+                if (id !== productId) {
+                    const p = products[id];
+                    const div = document.createElement('div');
+                    div.className = 'prod bg-neutral-950 border border-white/5';
+                    div.innerHTML = `
+                        <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='${JSON.stringify(p.images)}'>
+                            <div class="slider-container">
+                                ${p.images.map(img => `<img src="${img}" class="w-full h-full object-cover grs" alt="">`).join('')}
+                            </div>
+                            <div class="slider-dots">
+                                ${p.images.map((_, i) => `<span class="dot${i === 0 ? ' active' : ''}"></span>`).join('')}
+                            </div>
+                            <a href="product.html?id=${id}" class="absolute inset-0 z-10">
+                                <div class="prod-over">
+                                    <button onclick="event.preventDefault(); addCart('${p.name}',${p.price})" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="p-3 md:p-4">
+                            <h3 class="font-bold text-xs md:text-sm text-white">${p.name}</h3>
+                            <p class="text-neutral-600 text-[10px] mt-1">${p.color}</p>
+                            <p class="text-white font-mono font-bold text-xs mt-2">₺${p.price.toLocaleString()}</p>
+                        </div>
+                    `;
+                    relatedContainer.appendChild(div);
+                }
+            });
+        }
+
+        // Beden seçimi
+        document.querySelectorAll('.size-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.size-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+            });
+        });
+    </script>
 </body>
 </html>

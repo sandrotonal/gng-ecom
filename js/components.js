@@ -18,19 +18,23 @@ const toggleMob = toggleMobileMenu;
 // ═══ SEPET ═══
 let cart = [];
 
-function addToCart(name, price) {
-    const existing = cart.find(item => item.name === name);
+function addToCart(name, price, size = 'M', quantity = 1) {
+    const uniqueKey = name + '-' + size;
+    const existing = cart.find(item => item.uniqueKey === uniqueKey);
+    
     if (existing) {
-        existing.quantity++;
+        existing.quantity += quantity;
     } else {
         cart.push({
+            uniqueKey: uniqueKey,
             name: name,
             price: price,
-            quantity: 1
+            size: size,
+            quantity: quantity
         });
     }
     updateCart();
-    showToast(name + ' eklendi');
+    showToast(name + ' (' + size + ') x' + quantity + ' eklendi');
 }
 const addCart = addToCart;
 
@@ -62,7 +66,7 @@ function updateCart() {
                 <div class="flex items-center justify-between p-3 border border-white/5">
                     <div>
                         <p class="text-white text-xs font-bold">${item.name}</p>
-                        <p class="text-neutral-600 text-[10px]">x${item.quantity} — ₺${(item.price * item.quantity).toLocaleString()}</p>
+                        <p class="text-neutral-600 text-[10px]">Beden: ${item.size} — x${item.quantity} — ₺${(item.price * item.quantity).toLocaleString()}</p>
                     </div>
                     <button onclick="removeFromCart(${index})" class="text-neutral-600 hover:text-white transition-colors">
                         <i data-lucide="x" class="w-3 h-3"></i>

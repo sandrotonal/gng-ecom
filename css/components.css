@@ -215,6 +215,16 @@ a:hover { color: #fff; }
 }
 .icon-btn:hover { color: #fff; }
 
+/* ═══ BEDEN SEÇİMİ ═══ */
+.size-option {
+    transition: all 0.3s ease;
+}
+.size-option.selected {
+    background: white;
+    color: black;
+    border-color: white;
+}
+
 /* ═══ LOADING ═══ */
 .loading {
     display: inline-block;
