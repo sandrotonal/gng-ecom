@@ -3,51 +3,6 @@
    Ana JavaScript Dosyası
    ═══════════════════════════════════════════════════════════════ */
 
-// ═══ SPLASH EKRANI ═══
-let splashPct = 0;
-const splashPctEl = document.getElementById('sPct');
-const splashEnterEl = document.getElementById('sEnter');
-const enterBtnEl = document.getElementById('enterBtn');
-
-// Splash ekranı sadece ana sayfada çalışsın
-if (splashPctEl && splashEnterEl && enterBtnEl) {
-    const splashInterval = setInterval(() => {
-        splashPct += Math.floor(Math.random() * 12) + 3;
-        if (splashPct >= 100) {
-            splashPct = 100;
-            clearInterval(splashInterval);
-            splashPctEl.textContent = '100%';
-            splashEnterEl.classList.add('show');
-        } else {
-            splashPctEl.textContent = splashPct + '%';
-        }
-    }, 180);
-
-    function enterSite() {
-        const splash = document.getElementById('splash');
-        const site = document.getElementById('site');
-        if (splash) splash.classList.add('done');
-        if (site) site.style.opacity = '1';
-        document.body.style.overflow = 'auto';
-        lucide.createIcons();
-        initScrollReveal();
-    }
-
-    enterBtnEl.addEventListener('click', enterSite);
-    document.addEventListener('keydown', e => {
-        const splash = document.getElementById('splash');
-        if (e.key === 'Enter' && splash && !splash.classList.contains('done')) {
-            enterSite();
-        }
-    });
-    setTimeout(() => {
-        const splash = document.getElementById('splash');
-        if (splash && !splash.classList.contains('done')) {
-            enterSite();
-        }
-    }, 7000);
-}
-
 // ═══ SCROLL REVEAL ═══
 function initScrollReveal() {
     const observer = new IntersectionObserver(entries => {
@@ -57,12 +12,38 @@ function initScrollReveal() {
             }
         });
     }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -40px 0px'
+        threshold: 0.08,
+        rootMargin: '0px 0px -30px 0px'
     });
 
     document.querySelectorAll('.reveal, .line-reveal').forEach(el => {
         observer.observe(el);
+    });
+}
+
+// ═══ LAZY LOADING + FADE-IN ═══
+function initLazyImages() {
+    if ('loading' in HTMLImageElement.prototype) {
+        document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+            img.classList.add('loaded');
+        });
+    }
+    const imgObserver = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.classList.add('loaded');
+                obs.unobserve(img);
+            }
+        });
+    }, { rootMargin: '100px' });
+    document.querySelectorAll('img:not(.loaded)').forEach(img => {
+        imgObserver.observe(img);
+    });
+    // Image onload handler
+    document.querySelectorAll('img').forEach(img => {
+        if (img.complete) img.classList.add('loaded');
+        else img.addEventListener('load', function() { this.classList.add('loaded'); });
     });
 }
 
@@ -94,7 +75,7 @@ function showToast(message) {
         }, 2500);
     }
 }
-const toast = showToast;
+var toast = showToast;
 
 // ═══ NEWSLETTER ═══
 function handleNewsletter(e) {
@@ -236,26 +217,18 @@ function initProductSliders() {
 
 // ═══ SAYFA YÜKLENDİĞİNDE ═══
 document.addEventListener('DOMContentLoaded', () => {
-    // Lucide ikonlarını oluştur
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
     
-    // Eğer splash ekranı yoksa, siteyi göster ve overflow'u kaldır
-    const splash = document.getElementById('splash');
     const site = document.getElementById('site');
-    if (!splash) {
-        document.body.style.overflow = 'auto';
-        if (site) {
-            site.style.opacity = '1';
-        }
+    if (site) {
+        site.style.opacity = '1';
     }
+    document.body.style.overflow = 'auto';
     
-    // Scroll reveal'i başlat (splash ekranı kapandıktan sonra)
-    if (!splash || splash.classList.contains('done')) {
-        initScrollReveal();
-    }
-    
-    // Product slider'ları başlat
+    initScrollReveal();
+    initLazyImages();
     initProductSliders();
 });
+

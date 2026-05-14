@@ -164,55 +164,6 @@
     font-size: 12px;
 }
 
-/* ═══ CREW BÖLÜMÜ ═══ */
-#crew {
-    padding: 96px 0;
-    background: #000;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-#crew .crew-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-}
-@media (min-width: 768px) {
-    #crew .crew-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 24px;
-    }
-}
-#crew .crew-card-image {
-    position: relative;
-    aspect-ratio: 3/4;
-    overflow: hidden;
-    margin-bottom: 16px;
-}
-#crew .crew-card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-#crew .crew-card-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
-}
-#crew .crew-name {
-    font-weight: 900;
-    font-size: 14px;
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: -0.01em;
-}
-#crew .crew-role {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-family: 'Space Mono', monospace;
-    margin-top: 4px;
-}
-
 /* ═══ LOOKBOOK BÖLÜMÜ ═══ */
 #lookbook {
     padding: 96px 0;
@@ -253,67 +204,6 @@
 }
 #lookbook .lookbook-item-large {
     grid-row: span 2;
-}
-
-/* ═══ EVENTS BÖLÜMÜ ═══ */
-#events {
-    padding: 96px 0;
-    background: #000;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-#events .events-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-#events .event-card {
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    transition: border-color 0.3s ease;
-}
-#events .event-card:hover {
-    border-color: rgba(255, 255, 255, 0.15);
-}
-@media (min-width: 768px) {
-    #events .event-card {
-        flex-direction: row;
-        align-items: center;
-    }
-}
-#events .event-date {
-    width: 96px;
-    flex-shrink: 0;
-}
-#events .event-day {
-    font-family: 'Space Mono', monospace;
-    font-weight: 700;
-    font-size: 20px;
-    color: #fff;
-}
-#events .event-month {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.5);
-    font-family: 'Space Mono', monospace;
-}
-#events .event-info {
-    flex: 1;
-}
-#events .event-title {
-    font-weight: 700;
-    color: #fff;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: -0.01em;
-}
-#events .event-description {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 12px;
-    margin-top: 4px;
 }
 
 /* ═══ SIZE GUIDE BÖLÜMÜ ═══ */

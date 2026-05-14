@@ -8,6 +8,9 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
     <script>
         tailwind.config = {
             theme: {
@@ -20,237 +23,41 @@
             }
         }
     </script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        ::selection { background: #fff; color: #000; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #333; }
-
-        /* ═══ SPLASH ═══ */
-        #splash {
-            position: fixed; inset: 0; z-index: 9999;
-            background: #000; display: flex;
-            align-items: center; justify-content: center;
-            flex-direction: column;
-            transition: opacity 1s ease, visibility 1s ease;
-        }
-        #splash.done { opacity: 0; visibility: hidden; pointer-events: none; }
-
-        .splash-ring {
-            width: 120px; height: 120px;
-            border: 2px solid #222; border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .splash-pct {
-            font-family: 'Space Mono', monospace;
-            font-size: 11px; letter-spacing: 0.3em;
-            color: #444; margin-top: 24px;
-        }
-
-        .splash-enter {
-            margin-top: 32px; opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        .splash-enter.show { opacity: 1; }
-
-        .enter-btn {
-            font-family: 'Manrope', sans-serif;
-            font-size: 10px; font-weight: 700;
-            letter-spacing: 0.4em; text-transform: uppercase;
-            color: #fff; background: transparent;
-            border: 1px solid #333; padding: 16px 56px;
-            cursor: pointer; transition: all 0.3s ease;
-        }
-        .enter-btn:hover { border-color: #fff; background: #fff; color: #000; }
-
-        /* ═══ GENERAL ═══ */
-        .reveal {
-            opacity: 0; transform: translateY(30px);
-            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .reveal.on { opacity: 1; transform: translateY(0); }
-
-        .line-reveal {
-            width: 0; height: 1px; background: #333;
-            transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .line-reveal.on { width: 100%; }
-
-        /* ═══ MARQUEE ═══ */
-        .marquee-inner { display: flex; animation: scroll 30s linear infinite; }
-        @keyframes scroll { 0%{transform:translateX(0)}100%{transform:translateX(-50%)} }
-
-        /* ═══ PRODUCT ═══ */
-        .prod { position: relative; overflow: hidden; cursor: pointer; }
-        .prod img { transition: transform 0.7s cubic-bezier(0.16,1,0.3,1), filter 0.7s ease; }
-        .prod:hover img { transform: scale(1.04); filter: grayscale(0%) contrast(1) brightness(1); }
-        .prod-over {
-            position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
-            opacity: 0; transition: opacity 0.4s ease;
-            display: flex; align-items: flex-end; padding: 20px;
-        }
-        .prod:hover .prod-over { opacity: 1; }
-
-        /* ═══ PRODUCT SLIDER ═══ */
-        .product-slider { position: relative; }
-        .slider-container { position: relative; width: 100%; height: 100%; }
-        .slider-container img {
-            position: absolute; inset: 0; width: 100%; height: 100%;
-            object-fit: cover; opacity: 0; transition: opacity 0.5s ease;
-        }
-        .slider-container img.active { opacity: 1; }
-        .slider-dots {
-            position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 6px; z-index: 5;
-        }
-        .slider-dots .dot {
-            width: 6px; height: 6px; border-radius: 50%;
-            background: rgba(255,255,255,0.3); transition: all 0.3s ease;
-        }
-        .slider-dots .dot.active { background: white; width: 18px; border-radius: 3px; }
-
-        /* ═══ MOBILE MENU ═══ */
-        #mobMenu {
-            transform: translateX(100%);
-            transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
-        }
-        #mobMenu.open { transform: translateX(0); }
-
-        /* ═══ FAQ ═══ */
-        .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
-        .faq-a.open { max-height: 300px; }
-        .faq-i { transition: transform 0.3s ease; }
-        .faq-i.rot { transform: rotate(45deg); }
-
-        /* ═══ PROFILE ═══ */
-        .prof:hover .prof-img { filter: grayscale(0%) brightness(1); }
-        .prof-img { filter: grayscale(100%) brightness(0.8); transition: filter 0.5s ease; }
-
-        /* ═══ CART ═══ */
-        #cartBox { transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.16,1,0.3,1); }
-        #cartBox.open { transform: translateX(0); }
-
-        /* ═══ TOAST ═══ */
-        #toast {
-            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
-            background: #fff; color: #000; padding: 14px 28px;
-            font-family: 'Manrope', sans-serif; font-size: 12px;
-            font-weight: 700; letter-spacing: 0.1em; z-index: 10001;
-            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
-        }
-        #toast.up { transform: translateX(-50%) translateY(0); }
-
-        /* ═══ NOISE ═══ */
-        body::after {
-            content: ''; position: fixed; inset: 0; z-index: 9998;
-            pointer-events: none; opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        }
-
-        .grs { filter: grayscale(100%) contrast(1.1) brightness(0.8); }
-    </style>
 </head>
-<body class="bg-black text-white font-main" style="overflow:hidden;">
+<body class="bg-black text-white font-main">
 
     <!-- TOAST -->
     <div id="toast"></div>
 
-    <!-- ═══════════ SPLASH ═══════════ -->
-    <div id="splash">
-        <div class="splash-ring"></div>
-        <div class="splash-pct" id="sPct">0%</div>
-        <div class="splash-enter" id="sEnter">
-            <button class="enter-btn" id="enterBtn">GİRİŞ</button>
-        </div>
-    </div>
-
     <!-- ═══════════ SITE ═══════════ -->
     <div id="site" style="opacity:0; transition: opacity 0.8s ease 0.3s;">
 
-        <!-- NAV -->
-        <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/5">
-            <div class="max-w-7xl mx-auto px-5 md:px-10 flex items-center justify-between h-16 md:h-20">
-                <a href="#hero" class="font-mono font-bold text-lg md:text-xl text-white tracking-tight">GNG</a>
-                <div class="hidden lg:flex items-center gap-8">
-                    <a href="#drops" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Drops</a>
-                    <a href="#about" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Hakkında</a>
-                    <a href="#crew" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Kadro</a>
-                    <a href="#lookbook" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Lookbook</a>
-                    <a href="#events" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">Etkinlikler</a>
-                    <a href="#faq" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">SSS</a>
-                    <a href="pages/contact.html" class="text-[10px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors duration-300">İletişim</a>
-                </div>
-                <div class="flex items-center gap-4">
-                    <button onclick="openCart()" class="relative p-2 text-neutral-500 hover:text-white transition-colors">
-                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
-                        <span id="cartN" class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-white text-black text-[9px] font-bold rounded-full flex items-center justify-center">0</span>
-                    </button>
-                    <button class="lg:hidden p-2 text-white" onclick="toggleMob()">
-                        <i data-lucide="menu" class="w-5 h-5"></i>
-                    </button>
-                </div>
-            </div>
-        </nav>
+        <div id="gng-nav"></div>
 
-        <!-- MOBILE MENU -->
-        <div id="mobMenu" class="fixed inset-0 z-40 bg-black flex flex-col items-center justify-center gap-6 lg:hidden">
-            <a href="#drops" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">DROPS</a>
-            <a href="#about" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">HAKKINDA</a>
-            <a href="#crew" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">KADRO</a>
-            <a href="#lookbook" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">LOOKBOOK</a>
-            <a href="#events" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">ETKİNLİKLER</a>
-            <a href="#faq" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">SSS</a>
-            <a href="pages/contact.html" onclick="toggleMob()" class="text-2xl font-main font-black text-white tracking-tight">İLETİŞİM</a>
-            <div class="mt-8"><a href="#" class="text-neutral-600 hover:text-white transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a></div>
-        </div>
+        <div id="gng-cart"></div>
 
-        <!-- CART -->
-        <div id="cartBox" class="fixed top-0 right-0 h-full w-full max-w-sm bg-black border-l border-white/5 z-50">
-            <div class="flex items-center justify-between p-6 border-b border-white/5">
-                <span class="text-[10px] uppercase tracking-[0.3em] font-bold">Sepet</span>
-                <button onclick="closeCart()" class="text-neutral-500 hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            <div id="cartItems" class="p-6" style="max-height:calc(100vh - 160px); overflow-y:auto;">
-                <div id="cartEmpty" class="text-center py-20">
-                    <p class="text-neutral-600 text-xs">Sepetiniz boş</p>
-                </div>
-                <div id="cartList" class="space-y-3"></div>
-            </div>
-            <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-white/5">
-                <div class="flex justify-between mb-4">
-                    <span class="text-neutral-500 text-xs">Toplam</span>
-                    <span id="cartTot" class="font-mono font-bold text-sm">₺0</span>
-                </div>
-                <button class="w-full bg-white text-black py-3 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors">Satın Al</button>
-            </div>
-        </div>
-        <div id="cartOv" class="fixed inset-0 bg-black/70 z-40 hidden" onclick="closeCart()"></div>
+        <div id="gng-auth"></div>
 
         <!-- MARQUEE -->
-        <div class="fixed top-16 md:top-20 left-0 right-0 z-30 border-b border-white/5 py-2 overflow-hidden">
+        <div class="fixed top-16 md:top-20 left-0 right-0 z-30 border-b border-white/5 py-2 overflow-hidden bg-black/80">
             <div class="marquee-inner">
-                <span class="whitespace-nowrap text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono px-8">SS25 DROP YAYINDA — ÜCRETSİZ KARGO ₺1500 ÜZERİ — LIMITED EDITION — GNG ORIGINALS — STREET CULTURE — </span>
-                <span class="whitespace-nowrap text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono px-8">SS25 DROP YAYINDA — ÜCRETSİZ KARGO ₺1500 ÜZERİ — LIMITED EDITION — GNG ORIGINALS — STREET CULTURE — </span>
-                <span class="whitespace-nowrap text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono px-8">SS25 DROP YAYINDA — ÜCRETSİZ KARGO ₺1500 ÜZERİ — LIMITED EDITION — GNG ORIGINALS — STREET CULTURE — </span>
+                <span class="whitespace-nowrap text-[10px] uppercase tracking-[0.4em] text-neutral-300 font-mono px-8">SS25 DROP YAYINDA — ÜCRETSİZ KARGO ₺1500 ÜZERİ — LIMITED EDITION — GNG ORIGINALS — STREET CULTURE — </span>
+                <span class="whitespace-nowrap text-[10px] uppercase tracking-[0.4em] text-neutral-300 font-mono px-8">SS25 DROP YAYINDA — ÜCRETSİZ KARGO ₺1500 ÜZERİ — LIMITED EDITION — GNG ORIGINALS — STREET CULTURE — </span>
+                <span class="whitespace-nowrap text-[10px] uppercase tracking-[0.4em] text-neutral-300 font-mono px-8">SS25 DROP YAYINDA — ÜCRETSİZ KARGO ₺1500 ÜZERİ — LIMITED EDITION — GNG ORIGINALS — STREET CULTURE — </span>
             </div>
         </div>
 
         <!-- ═══ HERO ═══ -->
         <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-24">
             <div class="absolute inset-0">
-                <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1920&h=1080&fit=crop" class="w-full h-full object-cover grs" alt="">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1920&h=1080&fit=crop" class="w-full h-full object-cover grs" alt="">
                 <div class="absolute inset-0 bg-black/70"></div>
             </div>
             <div class="relative z-10 text-center px-5 max-w-5xl mx-auto">
                 <!-- Logo Circle -->
                 <div class="reveal mb-8 flex justify-center">
                     <div class="w-28 h-28 md:w-36 md:h-36 rounded-full border border-white/10 flex items-center justify-center overflow-hidden bg-black/50 backdrop-blur-sm">
-                        <img src="https://picsum.photos/seed/gng-logo-icon/200/200.jpg" class="w-full h-full object-cover grs" alt="">
+                        <img loading="lazy" src="https://picsum.photos/seed/gng-logo-icon/200/200.jpg" class="w-full h-full object-cover grs" alt="">
                     </div>
                 </div>
                 <p class="reveal text-[10px] md:text-xs uppercase tracking-[0.5em] text-neutral-500 mb-6 font-mono">Yakında</p>
@@ -263,10 +70,10 @@
                     Sokaktan doğan, şehrin nabzını taşıyan marka.
                 </p>
                 <div class="reveal mt-10 flex flex-col sm:flex-row gap-3 justify-center">
-                    <a href="#drops" class="bg-white text-black px-10 py-4 text-[10px] uppercase tracking-[0.25em] font-bold hover:bg-neutral-200 transition-colors inline-flex items-center justify-center gap-2">
+                    <a href="#drops" class="bg-white text-black px-10 py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors inline-flex items-center justify-center gap-2">
                         Koleksiyon <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                     </a>
-                    <a href="pages/contact.html" class="border border-white/10 text-white px-10 py-4 text-[10px] uppercase tracking-[0.25em] font-bold hover:border-white/30 transition-colors inline-flex items-center justify-center gap-2">
+                    <a href="pages/contact.html" class="border border-white/10 text-white px-10 py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:border-white/30 transition-colors inline-flex items-center justify-center gap-2">
                         Haberdar Ol
                     </a>
                 </div>
@@ -289,13 +96,91 @@
                     </a>
                 </div>
                 <div class="line-reveal mb-12"></div>
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
-                    <div class="reveal prod bg-neutral-950 border border-white/5">
+                
+                <!-- FILTER & SEARCH BAR -->
+<div class="reveal flex items-center gap-2 md:gap-3 mb-8">
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-neutral-500 pointer-events-none"></i>
+                        <input type="text" id="productSearch" placeholder="Ürün ara..." class="w-full bg-transparent border border-white/10 pl-9 md:pl-11 pr-3 py-2.5 md:py-3 text-[11px] md:text-xs text-white font-mono focus:outline-none focus:border-white/30 transition-colors placeholder:text-neutral-700">
+                    </div>
+                    <div class="relative z-10">
+                        <button id="filterToggle" class="flex items-center justify-center gap-1.5 md:gap-2 border border-white/10 px-3 md:px-4 py-2.5 md:py-3 hover:border-white/30 transition-all min-w-[44px] h-[38px] md:h-[44px]">
+                            <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 md:w-4 md:h-4 text-neutral-400"></i>
+                            <span class="text-[9px] md:text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-400 hidden xs:inline">Filtrele</span>
+                            <span id="filterCount" class="hidden text-[8px] md:text-[9px] font-mono bg-white text-black px-1.5 py-0.5 leading-none">0</span>
+                        </button>
+                        <div id="filterPanel" class="hidden fixed inset-0 md:absolute md:right-0 md:top-full md:mt-2 md:w-[360px] bg-neutral-950 md:border border-white/10 z-[60] overflow-y-auto">
+                            <div class="min-h-dvh md:min-h-0 p-5 md:p-6 space-y-5 md:space-y-6">
+                                <div class="flex items-center justify-between md:hidden">
+                                    <span class="text-[10px] uppercase tracking-[0.3em] font-bold text-white">Filtrele</span>
+                                    <button id="filterCloseMobile" class="text-neutral-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] uppercase tracking-[0.3em] text-neutral-500 font-mono mb-3">Sıralama</p>
+                                    <div class="space-y-1.5">
+                                        <label class="flex items-center gap-3 cursor-pointer group">
+                                            <input type="radio" name="sort" value="newest" checked class="appearance-none w-3.5 h-3.5 border border-white/20 bg-transparent checked:bg-white checked:border-white transition-all shrink-0">
+                                            <span class="text-xs text-neutral-400 group-hover:text-white transition-colors">En Yeni</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 cursor-pointer group">
+                                            <input type="radio" name="sort" value="oldest" class="appearance-none w-3.5 h-3.5 border border-white/20 bg-transparent checked:bg-white checked:border-white transition-all shrink-0">
+                                            <span class="text-xs text-neutral-400 group-hover:text-white transition-colors">En Eski</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 cursor-pointer group">
+                                            <input type="radio" name="sort" value="price-asc" class="appearance-none w-3.5 h-3.5 border border-white/20 bg-transparent checked:bg-white checked:border-white transition-all shrink-0">
+                                            <span class="text-xs text-neutral-400 group-hover:text-white transition-colors">Fiyat (Düşük → Yüksek)</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 cursor-pointer group">
+                                            <input type="radio" name="sort" value="price-desc" class="appearance-none w-3.5 h-3.5 border border-white/20 bg-transparent checked:bg-white checked:border-white transition-all shrink-0">
+                                            <span class="text-xs text-neutral-400 group-hover:text-white transition-colors">Fiyat (Yüksek → Düşük)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] uppercase tracking-[0.3em] text-neutral-500 font-mono mb-3">Stok Durumu</p>
+                                    <label class="flex items-center gap-3 cursor-pointer group">
+                                        <input type="checkbox" id="stockFilter" class="appearance-none w-3.5 h-3.5 border border-white/20 bg-transparent checked:bg-white checked:border-white transition-all shrink-0">
+                                        <span class="text-xs text-neutral-400 group-hover:text-white transition-colors">Sadece Stoktakiler</span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] uppercase tracking-[0.3em] text-neutral-500 font-mono mb-3">Kategori</p>
+                                    <div class="flex flex-wrap gap-1.5" id="filterCategoryList">
+                                        <button data-cat="all" class="filter-cat-btn active text-[9px] uppercase tracking-[0.15em] font-bold border border-white/20 text-white px-3 py-2 hover:border-white/40 transition-all">Tümü</button>
+                                        <button data-cat="hoodie" class="filter-cat-btn text-[9px] uppercase tracking-[0.15em] font-bold border border-white/10 text-neutral-500 px-3 py-2 hover:border-white/30 hover:text-white transition-all">Hoodie</button>
+                                        <button data-cat="tee" class="filter-cat-btn text-[9px] uppercase tracking-[0.15em] font-bold border border-white/10 text-neutral-500 px-3 py-2 hover:border-white/30 hover:text-white transition-all">Tişört</button>
+                                        <button data-cat="jacket" class="filter-cat-btn text-[9px] uppercase tracking-[0.15em] font-bold border border-white/10 text-neutral-500 px-3 py-2 hover:border-white/30 hover:text-white transition-all">Ceket</button>
+                                        <button data-cat="pants" class="filter-cat-btn text-[9px] uppercase tracking-[0.15em] font-bold border border-white/10 text-neutral-500 px-3 py-2 hover:border-white/30 hover:text-white transition-all">Pantolon</button>
+                                        <button data-cat="accessory" class="filter-cat-btn text-[9px] uppercase tracking-[0.15em] font-bold border border-white/10 text-neutral-500 px-3 py-2 hover:border-white/30 hover:text-white transition-all">Aksesuar</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] uppercase tracking-[0.3em] text-neutral-500 font-mono mb-3">Fiyat Aralığı</p>
+                                    <div class="flex items-center gap-3">
+                                        <input type="number" id="priceMin" placeholder="₺0" min="0" class="w-full bg-transparent border border-white/10 px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-white/30 placeholder:text-neutral-700">
+                                        <span class="text-neutral-700 text-xs shrink-0">—</span>
+                                        <input type="number" id="priceMax" placeholder="₺5000" min="0" class="w-full bg-transparent border border-white/10 px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-white/30 placeholder:text-neutral-700">
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 pt-2 border-t border-white/5">
+                                    <button id="filterReset" class="flex-1 text-[9px] uppercase tracking-[0.2em] font-bold border border-white/10 text-neutral-500 py-2.5 hover:border-white/30 hover:text-white transition-all">Sıfırla</button>
+                                    <button id="filterApply" class="flex-1 text-[9px] uppercase tracking-[0.2em] font-bold bg-white text-black py-2.5 hover:bg-neutral-200 transition-all">Uygula</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="filterOverlay" class="fixed inset-0 bg-black/70 z-[55] hidden"></div>
+                <!-- Active filter tags -->
+                <div id="filterTags" class="reveal flex flex-wrap gap-2 mb-6 hidden"></div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5 reveal-stagger" id="productGrid">
+                    <div class="reveal prod bg-neutral-950 border border-white/5" data-category="hoodie" data-name="Oversized Hoodie">
                         <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=800&fit=crop"]'>
                             <div class="slider-container">
-                                <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
-                                <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                                <img src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
                             <div class="slider-dots">
                                 <span class="dot active"></span>
@@ -304,7 +189,7 @@
                             </div>
                             <a href="pages/product.html?id=1" class="absolute inset-0 z-10">
                                 <div class="prod-over">
-                                    <button onclick="event.preventDefault(); addCart('Oversized Hoodie',1890)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                    <button onclick="event.stopPropagation(); addCart('Oversized Hoodie',1890)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
                                 </div>
                                 <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Yeni</span>
                             </a>
@@ -318,9 +203,9 @@
                     <div class="reveal prod bg-neutral-950 border border-white/5">
                         <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=600&h=800&fit=crop"]'>
                             <div class="slider-container">
-                                <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
-                                <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                                <img src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
                             <div class="slider-dots">
                                 <span class="dot active"></span>
@@ -329,7 +214,7 @@
                             </div>
                             <a href="pages/product.html?id=2" class="absolute inset-0 z-10">
                                 <div class="prod-over">
-                                    <button onclick="event.preventDefault(); addCart('Graphic Tee',890)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                    <button onclick="event.stopPropagation(); addCart('Graphic Tee',890)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
                                 </div>
                                 <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-neutral-800 text-neutral-400 px-2 py-1">Tükendi</span>
                             </a>
@@ -343,9 +228,9 @@
                     <div class="reveal prod bg-neutral-950 border border-white/5">
                         <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop&auto=format&h=800"]'>
                             <div class="slider-container">
-                                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
-                                <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop&auto=format&h=800" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop&auto=format&h=800" class="w-full h-full object-cover grs" alt="">
                             </div>
                             <div class="slider-dots">
                                 <span class="dot active"></span>
@@ -354,7 +239,7 @@
                             </div>
                             <a href="pages/product.html?id=3" class="absolute inset-0 z-10">
                                 <div class="prod-over">
-                                    <button onclick="event.preventDefault(); addCart('Bomber Jacket',3490)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                    <button onclick="event.stopPropagation(); addCart('Bomber Jacket',3490)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
                                 </div>
                             </a>
                         </div>
@@ -367,9 +252,9 @@
                     <div class="reveal prod bg-neutral-950 border border-white/5">
                         <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1521369909029-2afed882baee?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?w=600&h=800&fit=crop"]'>
                             <div class="slider-container">
-                                <img src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
-                                <img src="https://images.unsplash.com/photo-1521369909029-2afed882baee?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                                <img src="https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1521369909029-2afed882baee?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
                             <div class="slider-dots">
                                 <span class="dot active"></span>
@@ -378,7 +263,7 @@
                             </div>
                             <a href="pages/product.html?id=4" class="absolute inset-0 z-10">
                                 <div class="prod-over">
-                                    <button onclick="event.preventDefault(); addCart('Snapback Cap',690)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                    <button onclick="event.stopPropagation(); addCart('Snapback Cap',690)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
                                 </div>
                                 <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Limited</span>
                             </a>
@@ -392,9 +277,9 @@
                     <div class="reveal prod bg-neutral-950 border border-white/5">
                         <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=800&fit=crop"]'>
                             <div class="slider-container">
-                                <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
-                                <img src="https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                                <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
                             <div class="slider-dots">
                                 <span class="dot active"></span>
@@ -403,7 +288,7 @@
                             </div>
                             <a href="pages/product.html?id=5" class="absolute inset-0 z-10">
                                 <div class="prod-over">
-                                    <button onclick="event.preventDefault(); addCart('Cargo Pants',2290)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                    <button onclick="event.stopPropagation(); addCart('Cargo Pants',2290)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
                                 </div>
                             </a>
                         </div>
@@ -416,9 +301,9 @@
                     <div class="reveal prod bg-neutral-950 border border-white/5">
                         <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1591561954557-26941169b49e?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&h=800&fit=crop"]'>
                             <div class="slider-container">
-                                <img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
-                                <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                                <img src="https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1591561954557-26941169b49e?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
                             <div class="slider-dots">
                                 <span class="dot active"></span>
@@ -427,7 +312,7 @@
                             </div>
                             <a href="pages/product.html?id=6" class="absolute inset-0 z-10">
                                 <div class="prod-over">
-                                    <button onclick="event.preventDefault(); addCart('Shoulder Bag',1190)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                    <button onclick="event.stopPropagation(); addCart('Shoulder Bag',1190)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
                                 </div>
                                 <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Yeni</span>
                             </a>
@@ -441,9 +326,9 @@
                     <div class="reveal prod bg-neutral-950 border border-white/5">
                         <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=600&h=800&fit=crop"]'>
                             <div class="slider-container">
-                                <img src="https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
-                                <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                                <img src="https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
                             <div class="slider-dots">
                                 <span class="dot active"></span>
@@ -452,7 +337,7 @@
                             </div>
                             <a href="pages/product.html?id=7" class="absolute inset-0 z-10">
                                 <div class="prod-over">
-                                    <button onclick="event.preventDefault(); addCart('Ring Set',1490)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                    <button onclick="event.stopPropagation(); addCart('Ring Set',1490)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
                                 </div>
                                 <span class="absolute top-3 left-3 text-[8px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1">Limited</span>
                             </a>
@@ -466,9 +351,9 @@
                     <div class="reveal prod bg-neutral-950 border border-white/5">
                         <div class="relative aspect-[3/4] overflow-hidden product-slider" data-images='["https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=600&h=800&fit=crop","https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=600&h=800&fit=crop"]'>
                             <div class="slider-container">
-                                <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
-                                <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
-                                <img src="https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&h=800&fit=crop" class="w-full h-full object-cover grs active" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
+                                <img loading="lazy" src="https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=600&h=800&fit=crop" class="w-full h-full object-cover grs" alt="">
                             </div>
                             <div class="slider-dots">
                                 <span class="dot active"></span>
@@ -477,7 +362,7 @@
                             </div>
                             <a href="pages/product.html?id=8" class="absolute inset-0 z-10">
                                 <div class="prod-over">
-                                    <button onclick="event.preventDefault(); addCart('Çorap 3\'lü',390)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
+                                    <button onclick="event.stopPropagation(); addCart('Çorap 3\'lü',390)" class="w-full bg-white text-black py-3 text-[9px] uppercase tracking-[0.2em] font-bold">Hızlı Ekle</button>
                                 </div>
                             </a>
                         </div>
@@ -535,53 +420,8 @@
                         </div>
                     </div>
                     <div class="relative">
-                        <img src="https://picsum.photos/seed/gng-about-dark/700/900.jpg" class="w-full aspect-[3/4] object-cover grs" alt="">
+                        <img loading="lazy" src="https://picsum.photos/seed/gng-about-dark/700/900.jpg" class="w-full aspect-[3/4] object-cover grs" alt="">
                         <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent h-1/3"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ═══ CREW ═══ -->
-        <section id="crew" class="py-24 md:py-40 bg-black border-t border-white/5">
-            <div class="max-w-7xl mx-auto px-5 md:px-10">
-                <div class="reveal text-center mb-12 md:mb-16">
-                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Aile</p>
-                    <h2 class="text-5xl md:text-8xl font-black tracking-tighter uppercase">KADRO</h2>
-                </div>
-                <div class="line-reveal mb-12"></div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                    <div class="reveal prof">
-                        <div class="relative aspect-[3/4] overflow-hidden mb-4">
-                            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&h=700&fit=crop" class="w-full h-full object-cover prof-img" alt="">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        </div>
-                        <h3 class="font-black text-sm md:text-base text-white uppercase tracking-tight">KEMAL D.</h3>
-                        <p class="text-neutral-500 text-[9px] uppercase tracking-widest font-mono mt-1">Kurucu / Kreatif</p>
-                    </div>
-                    <div class="reveal prof">
-                        <div class="relative aspect-[3/4] overflow-hidden mb-4">
-                            <img src="https://picsum.photos/seed/gng-k2/500/700.jpg" class="w-full h-full object-cover prof-img" alt="">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        </div>
-                        <h3 class="font-black text-sm md:text-base text-white uppercase tracking-tight">DENİZ A.</h3>
-                        <p class="text-neutral-500 text-[9px] uppercase tracking-widest font-mono mt-1">Baş Tasarımcı</p>
-                    </div>
-                    <div class="reveal prof">
-                        <div class="relative aspect-[3/4] overflow-hidden mb-4">
-                            <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&h=700&fit=crop" class="w-full h-full object-cover prof-img" alt="">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        </div>
-                        <h3 class="font-black text-sm md:text-base text-white uppercase tracking-tight">SELEN K.</h3>
-                        <p class="text-neutral-500 text-[9px] uppercase tracking-widest font-mono mt-1">Marka Müdürü</p>
-                    </div>
-                    <div class="reveal prof">
-                        <div class="relative aspect-[3/4] overflow-hidden mb-4">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=700&fit=crop" class="w-full h-full object-cover prof-img" alt="">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        </div>
-                        <h3 class="font-black text-sm md:text-base text-white uppercase tracking-tight">CANO M.</h3>
-                        <p class="text-neutral-500 text-[9px] uppercase tracking-widest font-mono mt-1">Fotoğraf / Görsel</p>
                     </div>
                 </div>
             </div>
@@ -597,81 +437,24 @@
                 <div class="line-reveal mb-12"></div>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
                     <div class="reveal row-span-2 relative group overflow-hidden">
-                        <img src="https://picsum.photos/seed/gng-lb1/600/1200.jpg" class="w-full h-full object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
+                        <img loading="lazy" src="https://picsum.photos/seed/gng-lb1/600/1200.jpg" class="w-full h-full object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500"></div>
                     </div>
                     <div class="reveal relative group overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=600&fit=crop" class="w-full aspect-square object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
+                        <img loading="lazy" src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=600&fit=crop" class="w-full aspect-square object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500"></div>
                     </div>
                     <div class="reveal relative group overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&h=600&fit=crop" class="w-full aspect-square object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
+                        <img loading="lazy" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&h=600&fit=crop" class="w-full aspect-square object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500"></div>
                     </div>
                     <div class="reveal relative group overflow-hidden">
-                        <img src="https://picsum.photos/seed/gng-lb4/600/600.jpg" class="w-full aspect-square object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
+                        <img loading="lazy" src="https://picsum.photos/seed/gng-lb4/600/600.jpg" class="w-full aspect-square object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500"></div>
                     </div>
                     <div class="reveal relative group overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&h=600&fit=crop" class="w-full aspect-square object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
+                        <img loading="lazy" src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&h=600&fit=crop" class="w-full aspect-square object-cover grs transition-transform duration-700 group-hover:scale-105" alt="">
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ═══ EVENTS ═══ -->
-        <section id="events" class="py-24 md:py-40 bg-black border-t border-white/5">
-            <div class="max-w-5xl mx-auto px-5 md:px-10">
-                <div class="reveal text-center mb-12 md:mb-16">
-                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Yaklaşan</p>
-                    <h2 class="text-5xl md:text-8xl font-black tracking-tighter uppercase">ETKİNLİKLER</h2>
-                </div>
-                <div class="line-reveal mb-12"></div>
-                <div class="space-y-2">
-                    <div class="reveal border border-white/5 p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 hover:border-white/15 transition-colors">
-                        <div class="md:w-24 flex-shrink-0">
-                            <p class="font-mono font-bold text-xl text-white">15</p>
-                            <p class="text-[9px] uppercase tracking-widest text-neutral-600 font-mono">Mar 2025</p>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-white text-sm uppercase tracking-tight">SS25 Launch Party</h3>
-                            <p class="text-neutral-500 text-xs mt-1">GNG HQ, İstanbul — Live DJ, drinks, limited giveaways</p>
-                        </div>
-                        <button onclick="toast('RSVP gönderildi')" class="text-[9px] uppercase tracking-[0.2em] font-bold border border-white/10 text-white px-5 py-2.5 hover:bg-white hover:text-black transition-all">RSVP</button>
-                    </div>
-                    <div class="reveal border border-white/5 p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 hover:border-white/15 transition-colors">
-                        <div class="md:w-24 flex-shrink-0">
-                            <p class="font-mono font-bold text-xl text-white">22</p>
-                            <p class="text-[9px] uppercase tracking-widest text-neutral-600 font-mono">Mar 2025</p>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-white text-sm uppercase tracking-tight">Basement Sessions</h3>
-                            <p class="text-neutral-500 text-xs mt-1">Underground Venue, Ankara — Hip-hop & streetwear night</p>
-                        </div>
-                        <button onclick="toast('Bilet ayrıldı')" class="text-[9px] uppercase tracking-[0.2em] font-bold bg-white text-black px-5 py-2.5 hover:bg-neutral-200 transition-colors">Bilet</button>
-                    </div>
-                    <div class="reveal border border-white/5 p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 hover:border-white/15 transition-colors">
-                        <div class="md:w-24 flex-shrink-0">
-                            <p class="font-mono font-bold text-xl text-white">05</p>
-                            <p class="text-[9px] uppercase tracking-widest text-neutral-600 font-mono">Nis 2025</p>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-white text-sm uppercase tracking-tight">Pop-Up İzmir</h3>
-                            <p class="text-neutral-500 text-xs mt-1">Alsancak — 3 günlük pop-up, İzmir'e özel parçalar</p>
-                        </div>
-                        <button onclick="toast('Hatırlatıcı ayarlandı')" class="text-[9px] uppercase tracking-[0.2em] font-bold border border-white/10 text-white px-5 py-2.5 hover:border-white/30 transition-colors">Hatırlat</button>
-                    </div>
-                    <div class="reveal border border-white/5 p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 hover:border-white/15 transition-colors">
-                        <div class="md:w-24 flex-shrink-0">
-                            <p class="font-mono font-bold text-xl text-white">19</p>
-                            <p class="text-[9px] uppercase tracking-widest text-neutral-600 font-mono">Nis 2025</p>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-white text-sm uppercase tracking-tight">Graffiti Atölyesi</h3>
-                            <p class="text-neutral-500 text-xs mt-1">Kadıköy Hub — Cano M. ile workshop, tüm malzeme dahil</p>
-                        </div>
-                        <button onclick="toast('Kaydın alındı')" class="text-[9px] uppercase tracking-[0.2em] font-bold bg-white text-black px-5 py-2.5 hover:bg-neutral-200 transition-colors">Kayıt</button>
                     </div>
                 </div>
             </div>
@@ -686,7 +469,7 @@
                     <p class="text-neutral-500 text-xs mt-4">GNG oversized fit üretir. Normal bedeninin 1 numara küçüğünü al.</p>
                 </div>
                 <div class="reveal overflow-x-auto">
-                    <table class="w-full min-w-[480px] text-center">
+                    <table class="w-full text-center">
                         <thead>
                             <tr class="border-b border-white/10">
                                 <th class="py-3 text-[9px] uppercase tracking-widest font-mono text-white font-bold">Beden</th>
@@ -718,46 +501,68 @@
                 <div class="line-reveal mb-10"></div>
                 <div class="reveal space-y-1">
                     <div class="border-b border-white/5">
-                        <button onclick="togFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
-                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Kargo ne zaman gelir?</span>
-                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0"></i>
+                        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Siparişimi nasıl takip ederim?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0 transition-transform duration-300"></i>
                         </button>
-                        <div class="faq-a"><p class="pb-5 text-neutral-500 text-xs leading-relaxed">Türkiye içi 2-4 iş günü, uluslararası 7-14 iş günü. Kargo takip numaranız e-posta ile gönderilir.</p></div>
+                        <div class="faq-a"><div class="pb-5 text-neutral-500 text-xs leading-relaxed space-y-2"><p>Siparişiniz kargoya verildiğinde e-posta adresinize takip numarası gönderilir. Bu numara ile kargo firmasının web sitesinden siparişinizi anlık olarak takip edebilirsiniz.</p><p>Türkiye içi gönderilerde MNG Kargo, uluslararası gönderilerde DHL ile çalışıyoruz.</p></div></div>
+                        </button>
                     </div>
                     <div class="border-b border-white/5">
-                        <button onclick="togFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
-                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">İade yapabilir miyim?</span>
-                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0"></i>
+                        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Kargo ücreti ne kadar?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0 transition-transform duration-300"></i>
                         </button>
-                        <div class="faq-a"><p class="pb-5 text-neutral-500 text-xs leading-relaxed">14 gün içinde kullanılmamış, etiketi sökülmemiş ürünleri iade edebilirsiniz. Limited drop ürünleri iade kapsamında değildir.</p></div>
+                        <div class="faq-a"><div class="pb-5 text-neutral-500 text-xs leading-relaxed space-y-2"><p>₺1.500 ve üzeri tüm siparişlerde kargo ücretsizdir. Altındaki siparişlerde kargo ücreti ₺49'dur.</p><p>Uluslararası siparişlerde kargo ücreti bölgeye göre değişiklik gösterir ve ödeme sayfasında görüntülenir.</p></div></div>
+                        </button>
                     </div>
                     <div class="border-b border-white/5">
-                        <button onclick="togFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
-                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">GNG oversized mi?</span>
-                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0"></i>
+                        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">İade ve değişim koşullarınız nedir?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0 transition-transform duration-300"></i>
                         </button>
-                        <div class="faq-a"><p class="pb-5 text-neutral-500 text-xs leading-relaxed">Evet. Normal bedeninizin 1 numara küçüğünü almanızı tavsiye ederiz.</p></div>
+                        <div class="faq-a"><div class="pb-5 text-neutral-500 text-xs leading-relaxed space-y-2"><p>Teslim tarihinden itibaren 14 gün içinde, kullanılmamış ve etiketi sökülmemiş ürünleri iade edebilirsiniz.</p><p>İade sürecini başlatmak için sipariş numaranızla birlikte <strong>destek@gng.com</strong> adresine mail atmanız yeterli. İade kargo ücreti tarafımızdan karşılanır.</p><p class="text-neutral-600">Not: Limited drop ve indirimli ürünler iade kapsamı dışındadır.</p></div></div>
+                        </button>
                     </div>
                     <div class="border-b border-white/5">
-                        <button onclick="togFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
-                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Uluslararası sipariş verebilir miyim?</span>
-                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0"></i>
+                        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Beden tablosu nasıl okunur?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0 transition-transform duration-300"></i>
                         </button>
-                        <div class="faq-a"><p class="pb-5 text-neutral-500 text-xs leading-relaxed">Avrupa ve ABD'ye sevkiyat başlamıştır. Diğer bölgeler için iletişime geçin.</p></div>
+                        <div class="faq-a"><div class="pb-5 text-neutral-500 text-xs leading-relaxed space-y-2"><p>GNG oversized fit üretir. Yani normalde giydiğiniz bedenden 1 numara küçük almanızı öneririz.</p><p>Örneğin: Normalde L giyiyorsanız, GNG'de M tercih etmelisiniz. Daha bol bir siluet istiyorsanız kendi bedeninizi de seçebilirsiniz.</p><p>Detaylı beden tablosu için yukarıdaki <strong>Beden Tablosu</strong> bölümüne göz atabilirsiniz.</p></div></div>
+                        </button>
                     </div>
                     <div class="border-b border-white/5">
-                        <button onclick="togFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
-                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Limited drop'lar ne zaman açılıyor?</span>
-                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0"></i>
+                        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Hangi ödeme yöntemlerini kabul ediyorsunuz?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0 transition-transform duration-300"></i>
                         </button>
-                        <div class="faq-a"><p class="pb-5 text-neutral-500 text-xs leading-relaxed">Tarihler Instagram ve newsletter üzerinden duyurulur. Erken erişim için GNG ailesine katılın.</p></div>
+                        <div class="faq-a"><div class="pb-5 text-neutral-500 text-xs leading-relaxed space-y-2"><p>Kredi kartı (Visa, Mastercard, AMEX), banka havalesi ve kapıda ödeme seçeneklerimiz mevcuttur.</p><p>Tüm kredi kartı işlemleri 3D Secure ile korunmaktadır. Havale ile ödemede siparişiniz hesaba para geçtikten sonra işleme alınır.</p></div></div>
+                        </button>
                     </div>
                     <div class="border-b border-white/5">
-                        <button onclick="togFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
-                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Collab yapmak istiyorum?</span>
-                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0"></i>
+                        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Yurt dışına gönderim yapıyor musunuz?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0 transition-transform duration-300"></i>
                         </button>
-                        <div class="faq-a"><p class="pb-5 text-neutral-500 text-xs leading-relaxed">collab@gng.com adresine portfolio ve konsept önerinizle başvurun.</p></div>
+                        <div class="faq-a"><div class="pb-5 text-neutral-500 text-xs leading-relaxed space-y-2"><p>Evet, Avrupa ve ABD'ye düzenli sevkiyat yapıyoruz. Diğer bölgeler için talebinizi <strong>destek@gng.com</strong> adresine iletebilirsiniz.</p><p>Uluslararası gönderilerde gümrük vergileri alıcıya aittir. Teslimat süresi bölgeye göre 7-14 iş günü arasındadır.</p></div></div>
+                        </button>
+                    </div>
+                    <div class="border-b border-white/5">
+                        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Stokta olmayan ürün ne zaman gelir?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-a"><div class="pb-5 text-neutral-500 text-xs leading-relaxed space-y-2"><p>Her sezon belirli sayıda üretim yapıyoruz ve stoklar tükendiğinde yeniden üretim garantisi veremiyoruz.</p><p>Ancak newsletter'a abone olarak yeni drop'lardan ve restock'lardan ilk sizin haberiniz olur. Instagram hikayelerimizi de takipte kalın!</p></div></div>
+                        </button>
+                    </div>
+                    <div class="border-b border-white/5">
+                        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between py-5 text-left group">
+                            <span class="text-white text-sm font-bold group-hover:text-neutral-300 transition-colors">Collab veya işbirliği nasıl yapabilirim?</span>
+                            <i data-lucide="plus" class="w-4 h-4 text-neutral-600 faq-i flex-shrink-0 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-a"><div class="pb-5 text-neutral-500 text-xs leading-relaxed space-y-2"><p>Sanatçılar, tasarımcılar ve markalarla işbirliğine her zaman açığız.</p><p>Portfolyonuz ve konsept önerinizle <strong>collab@gng.com</strong> adresine başvurabilirsiniz. Tüm başvurular ekibimiz tarafından değerlendirilir ve dönüş yapılır.</p></div></div>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -771,11 +576,11 @@
                     <h2 class="text-3xl md:text-5xl font-black tracking-tighter uppercase">@GHETTONEEDGANGSTAZ</h2>
                 </div>
                 <div class="reveal grid grid-cols-3 md:grid-cols-5 gap-1">
-                    <a href="#" class="relative group aspect-square overflow-hidden"><img src="https://picsum.photos/seed/gng-ig-a/400/400.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
-                    <a href="#" class="relative group aspect-square overflow-hidden"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
-                    <a href="#" class="relative group aspect-square overflow-hidden"><img src="https://picsum.photos/seed/gng-ig-c/400/400.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
-                    <a href="#" class="relative group aspect-square overflow-hidden hidden md:block"><img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&h=400&fit=crop" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
-                    <a href="#" class="relative group aspect-square overflow-hidden hidden md:block"><img src="https://picsum.photos/seed/gng-ig-e/400/400.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
+                    <a href="#" class="relative group aspect-square overflow-hidden"><img loading="lazy" src="https://picsum.photos/seed/gng-ig-a/400/400.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></a>
+                    <a href="#" class="relative group aspect-square overflow-hidden"><img loading="lazy" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></a>
+                    <a href="#" class="relative group aspect-square overflow-hidden"><img loading="lazy" src="https://picsum.photos/seed/gng-ig-c/400/400.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></a>
+                    <a href="#" class="relative group aspect-square overflow-hidden hidden md:block"><img loading="lazy" src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&h=400&fit=crop" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></a>
+                    <a href="#" class="relative group aspect-square overflow-hidden hidden md:block"><img loading="lazy" src="https://picsum.photos/seed/gng-ig-e/400/400.jpg" class="w-full h-full object-cover grs transition-transform duration-500 group-hover:scale-110" alt=""><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></a>
                 </div>
             </div>
         </section>
@@ -790,7 +595,7 @@
                     <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-600 font-mono mb-3">// Bağlı Kal</p>
                     <h2 class="text-4xl md:text-7xl font-black tracking-tighter uppercase mb-4">HABERDAR OL</h2>
                     <p class="text-neutral-500 text-sm max-w-sm mx-auto mb-10">Özel drop'lar, limited parçalar, etkinlikler. İlk sen öğren.</p>
-                    <form onsubmit="handleNL(event)" class="flex flex-col sm:flex-row gap-2">
+                    <form onsubmit="handleNewsletter(event)" class="flex flex-col sm:flex-row gap-2">
                         <input type="email" placeholder="E-posta adresiniz" required class="flex-1 bg-transparent border border-white/10 px-5 py-4 text-white text-xs placeholder:text-neutral-600 focus:outline-none focus:border-white/30 transition-colors font-mono">
                         <button type="submit" class="bg-white text-black px-8 py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors whitespace-nowrap">BİLDİR</button>
                     </form>
@@ -799,140 +604,14 @@
             </div>
         </section>
 
-        <!-- ═══ FOOTER ═══ -->
-        <footer class="border-t border-white/5 pt-16 pb-8 bg-black">
-            <div class="max-w-7xl mx-auto px-5 md:px-10">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-                    <div class="col-span-2 md:col-span-1">
-                        <span class="font-mono font-bold text-2xl text-white">GNG</span>
-                        <p class="text-neutral-600 text-xs mt-4 leading-relaxed max-w-xs">Sokaktan doğan, şehrin nabzını taşıyan marka.</p>
-                        <div class="flex gap-3 mt-6">
-                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="instagram" class="w-3.5 h-3.5"></i></a>
-                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="twitter" class="w-3.5 h-3.5"></i></a>
-                            <a href="#" class="w-8 h-8 border border-white/5 rounded-full flex items-center justify-center text-neutral-600 hover:text-white hover:border-white/20 transition-all"><i data-lucide="youtube" class="w-3.5 h-3.5"></i></a>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Mağaza</h4>
-                        <ul class="space-y-2">
-                            <li><a href="#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Yeni Gelenler</a></li>
-                            <li><a href="#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Hoodie</a></li>
-                            <li><a href="#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">T-Shirt</a></li>
-                            <li><a href="#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Pantolon</a></li>
-                            <li><a href="#drops" class="text-neutral-600 text-xs hover:text-white transition-colors">Aksesuar</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Bilgi</h4>
-                        <ul class="space-y-2">
-                            <li><a href="#about" class="text-neutral-600 text-xs hover:text-white transition-colors">Hakkımızda</a></li>
-                            <li><a href="pages/shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Beden Rehberi</a></li>
-                            <li><a href="pages/shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Kargo</a></li>
-                            <li><a href="pages/shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">İade</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-[9px] uppercase tracking-[0.3em] text-white font-bold mb-5">Yasal</h4>
-                        <ul class="space-y-2">
-                            <li><a href="pages/privacy.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Gizlilik</a></li>
-                            <li><a href="pages/terms.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Koşullar</a></li>
-                            <li><a href="pages/shipping.html" class="text-neutral-600 text-xs hover:text-white transition-colors">Çerez</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p class="text-neutral-700 text-[10px] font-mono">© 2025 GNG — GHETTO NEED GANGSTAZ</p>
-                    <div class="flex items-center gap-3 text-neutral-700">
-                        <span class="text-[10px] font-mono">VISA</span>
-                        <span class="text-[10px] font-mono">MC</span>
-                        <span class="text-[10px] font-mono">AMEX</span>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        <div id="gng-footer"></div>
 
     </div>
 
-    <script>
-        // ═══ SPLASH ═══
-        let pct = 0;
-        const sPct = document.getElementById('sPct');
-        const sEnter = document.getElementById('sEnter');
-        const enterBtn = document.getElementById('enterBtn');
-
-        const sInt = setInterval(() => {
-            pct += Math.floor(Math.random() * 12) + 3;
-            if (pct >= 100) { pct = 100; clearInterval(sInt); sPct.textContent = '100%'; sEnter.classList.add('show'); }
-            else { sPct.textContent = pct + '%'; }
-        }, 180);
-
-        function go() {
-            document.getElementById('splash').classList.add('done');
-            document.getElementById('site').style.opacity = '1';
-            document.body.style.overflow = 'auto';
-            lucide.createIcons();
-            initObs();
-        }
-
-        enterBtn.addEventListener('click', go);
-        document.addEventListener('keydown', e => { if (e.key === 'Enter' && !document.getElementById('splash').classList.contains('done')) go(); });
-        setTimeout(() => { if (!document.getElementById('splash').classList.contains('done')) go(); }, 7000);
-
-        // ═══ MOBILE ═══
-        let mOpen = false;
-        function toggleMob() { mOpen = !mOpen; document.getElementById('mobMenu').classList.toggle('open', mOpen); }
-
-        // ═══ SCROLL REVEAL ═══
-        function initObs() {
-            const obs = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-            document.querySelectorAll('.reveal, .line-reveal').forEach(el => obs.observe(el));
-        }
-
-        // ═══ CART ═══
-        let cart = [];
-        function addCart(n, p) { const ex = cart.find(i => i.n === n); if (ex) ex.q++; else cart.push({ n, p, q: 1 }); updCart(); toast(n + ' eklendi'); }
-        function rmCart(i) { cart.splice(i, 1); updCart(); }
-        function updCart() {
-            const c = cart.reduce((s, i) => s + i.q, 0);
-            const t = cart.reduce((s, i) => s + i.p * i.q, 0);
-            document.getElementById('cartN').textContent = c;
-            document.getElementById('cartTot').textContent = '₺' + t.toLocaleString();
-            const list = document.getElementById('cartList');
-            const empty = document.getElementById('cartEmpty');
-            if (!cart.length) { empty.style.display = 'block'; list.innerHTML = ''; }
-            else { empty.style.display = 'none'; list.innerHTML = cart.map((i, x) => `<div class="flex items-center justify-between p-3 border border-white/5"><div><p class="text-white text-xs font-bold">${i.n}</p><p class="text-neutral-600 text-[10px]">x${i.q} — ₺${(i.p*i.q).toLocaleString()}</p></div><button onclick="rmCart(${x})" class="text-neutral-600 hover:text-white transition-colors"><i data-lucide="x" class="w-3 h-3"></i></button></div>`).join(''); lucide.createIcons(); }
-        }
-        function openCart() { document.getElementById('cartBox').classList.add('open'); document.getElementById('cartOv').classList.remove('hidden'); }
-        function closeCart() { document.getElementById('cartBox').classList.remove('open'); document.getElementById('cartOv').classList.add('hidden'); }
-
-        // ═══ TOAST ═══
-        function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('up'); setTimeout(() => t.classList.remove('up'), 2500); }
-
-        // ═══ FAQ ═══
-        function togFaq(btn) {
-            const a = btn.nextElementSibling, ic = btn.querySelector('.faq-i');
-            const open = a.classList.contains('open');
-            document.querySelectorAll('.faq-a').forEach(x => x.classList.remove('open'));
-            document.querySelectorAll('.faq-i').forEach(x => x.classList.remove('rot'));
-            if (!open) { a.classList.add('open'); ic.classList.add('rot'); }
-        }
-
-        // ═══ NEWSLETTER ═══
-        function handleNL(e) {
-            e.preventDefault();
-            const m = document.getElementById('nlMsg');
-            m.classList.remove('hidden'); m.textContent = 'GNG ailesine hoş geldin.';
-            e.target.reset(); setTimeout(() => m.classList.add('hidden'), 4000);
-        }
-
-        // ═══ SMOOTH SCROLL ═══
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', e => {
-                const h = a.getAttribute('href'); if (h === '#') return;
-                e.preventDefault(); const t = document.querySelector(h);
-                if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-        });
-    </script>
+    <script src="js/shared.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/pages.js"></script>
+    <script>SHARED.init(false);</script>
 </body>
 </html>

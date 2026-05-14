@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kargo Takip — GNG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>tailwind.config={theme:{extend:{fontFamily:{main:['Manrope','sans-serif'],mono:['Space Mono','monospace']}}}}</script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <style>.track-step{opacity:0;transform:translateY(20px);animation:trackIn 0.5s ease forwards}.track-step:nth-child(1){animation-delay:0.1s}.track-step:nth-child(2){animation-delay:0.25s}.track-step:nth-child(3){animation-delay:0.4s}.track-step:nth-child(4){animation-delay:0.55s}.track-step:nth-child(5){animation-delay:0.7s}@keyframes trackIn{to{opacity:1;transform:translateY(0)}}</style>
+</head>
+<body class="bg-black text-white font-main">
+    <div id="toast"></div>
+    <div id="site">
+        <div id="gng-nav"></div>
+        <div id="gng-cart"></div>
+        <div id="gng-auth"></div>
+        <section class="pt-32 pb-24 md:pt-40 md:pb-40 min-h-screen">
+            <div class="max-w-2xl mx-auto px-5">
+                <div class="reveal text-center mb-12">
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-500 font-mono mb-3">// Takip</p>
+                    <h1 class="text-4xl md:text-6xl font-black tracking-tighter uppercase">KARGO TAKİP</h1>
+                    <p class="text-neutral-500 text-xs mt-4">Sipariş numaranızı girerek kargonuzu takip edin</p>
+                </div>
+                <div class="reveal border border-white/5 p-6 mb-10">
+                    <div class="flex gap-3">
+                        <input type="text" id="trackingInput" placeholder="GNG-XXXXX" class="flex-1 bg-transparent border border-white/10 px-4 py-3 text-white text-xs font-mono focus:outline-none focus:border-white/30 placeholder:text-neutral-700 uppercase tracking-wider">
+                        <button onclick="trackOrder()" class="bg-white text-black px-8 py-3 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-all whitespace-nowrap">Sorgula</button>
+                    </div>
+                    <div id="trackingError" class="text-[10px] font-mono text-red-500 mt-3 hidden"></div>
+                </div>
+                <div id="trackingResult" class="hidden">
+                    <div class="border border-white/5 p-6 mb-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <p class="text-[9px] uppercase tracking-[0.3em] text-neutral-500 font-mono mb-1">Sipariş No</p>
+                                <p id="trackOrderNum" class="font-mono text-white text-sm font-bold"></p>
+                            </div>
+                            <span id="trackStatus" class="text-[9px] uppercase tracking-widest font-bold bg-white text-black px-3 py-1.5"></span>
+                        </div>
+                        <div id="trackSteps" class="space-y-0"></div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-neutral-600 text-[10px] font-mono">Sorun yaşarsanız <a href="contact.html" class="text-white underline underline-offset-2 hover:text-neutral-300">iletişime geçin</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div id="gng-footer"></div>
+    </div>
+    <script src="../js/shared.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/components.js"></script>
+    <script>
+        function trackOrder() {
+            var input = document.getElementById('trackingInput');
+            var err = document.getElementById('trackingError');
+            var result = document.getElementById('trackingResult');
+            var code = input.value.trim().toUpperCase();
+            if (!code || code.length < 5) {
+                err.textContent = 'Geçerli bir sipariş numarası girin';
+                err.classList.remove('hidden');
+                result.classList.add('hidden');
+                return;
+            }
+            err.classList.add('hidden');
+            var steps = [
+                { label: 'Sipariş Alındı', done: true, date: '14 May 2026' },
+                { label: 'Hazırlanıyor', done: true, date: '14 May 2026' },
+                { label: 'Kargoya Verildi', done: true, date: '15 May 2026' },
+                { label: 'Dağıtıma Çıktı', done: false, date: '16 May 2026' },
+                { label: 'Teslim Edildi', done: false, date: '—' }
+            ];
+            document.getElementById('trackOrderNum').textContent = code;
+            document.getElementById('trackStatus').textContent = 'Kargoda';
+            var container = document.getElementById('trackSteps');
+            container.innerHTML = steps.map(function(s, i) {
+                return '<div class="track-step flex gap-4 py-4 border-b border-white/5 last:border-0">\
+                    <div class="flex flex-col items-center">\
+                        <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center ' + (s.done ? 'bg-white border-white' : 'border-neutral-700') + '">\
+                            ' + (s.done ? '<svg viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" class="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12"/></svg>' : '') + '\
+                        </div>\
+                        ' + (i < steps.length - 1 ? '<div class="w-px flex-1 ' + (s.done ? 'bg-white/20' : 'bg-white/5') + '"></div>' : '') + '\
+                    </div>\
+                    <div class="flex-1 pb-2">\
+                        <p class="text-xs ' + (s.done ? 'text-white font-bold' : 'text-neutral-600') + '">' + s.label + '</p>\
+                        <p class="text-[10px] font-mono ' + (s.done ? 'text-neutral-500' : 'text-neutral-700') + '">' + s.date + '</p>\
+                    </div>\
+                </div>';
+            }).join('');
+            result.classList.remove('hidden');
+        }
+        SHARED.init(true);
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sipariş Onayı — GNG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>tailwind.config={theme:{extend:{fontFamily:{main:['Manrope','sans-serif'],mono:['Space Mono','monospace']}}}}</script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body class="bg-black text-white font-main">
+    <div id="toast"></div>
+    <div id="site">
+        <div id="gng-nav"></div>
+        <div id="gng-cart"></div>
+        <div id="gng-auth"></div>
+        <section class="pt-32 pb-24 md:pt-40 md:pb-40 min-h-screen flex items-center">
+            <div class="max-w-lg mx-auto px-5 text-center">
+                <div class="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mx-auto mb-6">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-8 h-8 text-white"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <p class="text-[9px] uppercase tracking-[0.4em] text-neutral-500 font-mono mb-4">// Başarılı</p>
+                <h1 class="text-4xl md:text-5xl font-black tracking-tighter uppercase mb-4">SİPARİŞİNİZ<br>ALINDI</h1>
+                <p class="text-neutral-500 text-sm leading-relaxed mb-2">Sipariş numaranız</p>
+                <p class="font-mono text-white text-lg font-bold mb-8">GNG-<span id="orderNum">XXXXX</span></p>
+                <p class="text-neutral-500 text-xs leading-relaxed max-w-sm mx-auto mb-10">Sipariş onayınız e-posta adresinize gönderildi. Kargonuzu sipariş numaranız ile takip edebilirsiniz.</p>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="../index.html#drops" class="bg-white text-black px-10 py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors">Alışverişe Devam Et</a>
+                    <a href="../index.html" class="border border-white/10 text-white px-10 py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:border-white/30 transition-colors">Ana Sayfa</a>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="../js/shared.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/components.js"></script>
+    <script>
+        document.getElementById('orderNum').textContent = Math.floor(10000 + Math.random() * 90000);
+        localStorage.removeItem('gng_cart');
+        SHARED.init(true);
+    </script>
+</body>
+</html>
